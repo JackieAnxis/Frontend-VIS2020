@@ -1,13 +1,22 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { requestWholeGraph } from '../actions/wholeGraph'
 
 class WholeGraph extends React.Component {
+    componentDidMount() {
+        this.props.dispatch(requestWholeGraph())
+    }
     render() {
         return (
             <div>
-                WholeGraph
+                {this.props.name}
             </div>
         )
     }
 }
 
-export default WholeGraph
+function mapStateToProps(state) {
+    return state.wholeGraph
+}
+
+export default connect(mapStateToProps)(WholeGraph)

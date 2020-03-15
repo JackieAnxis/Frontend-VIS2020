@@ -1,11 +1,8 @@
 import { combineReducers } from 'redux';
-
-function testReducers(state = null, action) {
-    return state;
-}
+import { wholeGraph } from './wholeGraph'
 
 const rootReducer = combineReducers({
-    testReducers,
+    wholeGraph,
 });
 
 
