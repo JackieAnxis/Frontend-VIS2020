@@ -1,9 +1,7 @@
 import React from 'react'
-import * as d3 from 'd3'
 import { Provider } from 'react-redux'
-import NodeLink from './components/NodeLink'
 import configureStore from './configureStore'
-import ExemplarGraphs from './components/exemplar/ExemplarGraphs'
+import WholeGraph from './components/WholeGraph'
 
 export const store = configureStore()
 
@@ -15,10 +13,7 @@ class App extends React.Component {
     render() {
         return (
             <Provider store={store}>
-                <div>
-                    <NodeLink />
-                    <ExemplarGraphs />
-                </div>
+                <WholeGraph />
             </Provider>
         )
     }
