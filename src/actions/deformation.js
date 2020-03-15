@@ -2,8 +2,6 @@ import {
   backendAddress
 } from '../config'
 
-import { setTargetGenerated } from './graphs'
-
 export const GOT_DEFORMATION_RESULT = 'GOT_DEFORMATION_RESULT'
 export const SET_DEFORMATION_MARKER = 'SET_DEFORMATION_MARKER'
 export const SET_DEFORMATION_GRAPH = 'SET_DEFORMATION_GRAPH'
@@ -16,8 +14,8 @@ export function gotDeformationResult(targetGraphId, data) {
   // const {deformedTargetGraph, newG} = data;
   res[targetGraphId] = data;
   return {
-    type: GOT_DEFORMATION_RESULT,
-    data: res//[res, newG]
+      type: GOT_DEFORMATION_RESULT,
+      data: res//[res, newG]
   }
 }
 
@@ -45,42 +43,41 @@ export function copyDeformationHistory(data) {
 export function applyDeformationToSubgraph(postData) {
   const url = `${backendAddress}/apply-deformation`
   return (dispatch) => {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(postData)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        // dispatch(gotDeformationResult(postData.targetGraphId, data))
-        dispatch(setTargetGenerated(data))
-      })
+      return fetch(url, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(postData)
+          })
+          .then((res) => res.json())
+          .then((data) => {
+              dispatch(gotDeformationResult(postData.targetGraphId, data))
+          })
   }
 }
 
 export function gotWholeGraphDeformationResult(data) {
   return {
-    type: GOT_WHOLEGRAPH_DEFORMATION_RESULT,
-    data: data
+      type: GOT_WHOLEGRAPH_DEFORMATION_RESULT,
+      data: data
   }
 }
 
 export function applyDeformationToWholegraph(postData) {
   const url = `${backendAddress}/apply-deformation-wholegraph`
   return (dispatch) => {
-    return fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(postData)
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        dispatch(gotWholeGraphDeformationResult(data))
-      })
+      return fetch(url, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(postData)
+          })
+          .then((res) => res.json())
+          .then((data) => {
+              dispatch(gotWholeGraphDeformationResult(data))
+          })
   }
 }
 

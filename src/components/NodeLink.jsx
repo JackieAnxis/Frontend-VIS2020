@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import * as VIS from '../vis'
 import { requestWholeGraph } from '../actions/wholeGraph'
 import { newExemplar } from '../actions/exemplar'
-import { lassoData } from '../actions/wholeGraph'
+import { toggleLasso } from '../actions/wholeGraph'
 
 class NodeLink extends React.Component {
 	// static propTypes = {
@@ -24,9 +24,7 @@ class NodeLink extends React.Component {
 	}
 
 	onSelection(data) {
-    if ("nodes" in data && data.nodes.length)
-		  this.props.dispatch(lassoData(data))
-		// this.props.dispatch(newExemplar(data))
+		this.props.dispatch(newExemplar(data))
 	}
 
 	componentDidUpdate() {

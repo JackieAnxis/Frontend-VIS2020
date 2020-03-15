@@ -29,11 +29,11 @@ class GraphUnit extends React.Component {
       if (deformedSourceGraph) {
         this.props.dispatch(applyDeformationToSubgraph({
           markers: points,
-        //   nodeMaps: this.props.nodeMaps,
+          nodeMaps: this.props.nodeMaps,
           sourceGraph: sourceGraph,//this.props.exemplarGraph,
           _sourceGraph: deformedSourceGraph,
           targetGraph: {"nodes": this.props.graph.nodes, "links": this.props.graph.links},
-        //   targetGraphId: this.props.id,
+          targetGraphId: this.props.id,
           // wholeGraphData: this.props.wholeGraphData
         }))
       }
