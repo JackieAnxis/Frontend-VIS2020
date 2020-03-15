@@ -1,0 +1,13 @@
+#NodeLinkViewContainer {
+    left: 10px;
+    top: 10px;
+    height: 1060px;
+    width: 1020px;
+}
+
+.container {
+    top: 40px;
+    position: relative;
+    height: 1020px;
+    width: 1020px;
+}

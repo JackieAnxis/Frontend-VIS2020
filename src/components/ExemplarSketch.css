@@ -1,0 +1,15 @@
+#ExemplarSketchViewContainer {
+    left: 1040px;
+    top: 10px;
+    width: 386.67px;
+    /*426.67-40*/
+    height: 426.67px;
+    /*1080 - 623.33 - 10 * 3*/
+}
+
+.container {
+    top: 40px;
+    position: relative;
+    height: 386.66px;
+    width: 386.66px;
+}

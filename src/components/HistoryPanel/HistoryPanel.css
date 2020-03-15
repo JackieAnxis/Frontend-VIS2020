@@ -1,0 +1,81 @@
+#HistoryPanelContainer {
+  position: relative;
+  float: right;
+  margin-right: 10px;
+  margin-top: 10px;
+  font-size: 26px;
+  line-height: 40px;
+}
+
+#ClickIcon {
+  padding-right: 10px;
+  text-align: right;
+  position: relative;
+  z-index: 1;
+}
+
+#HistoryTitle {
+  font-weight: 800;
+  line-height: 40px;
+  /* font-size: 26px; */
+  background: #f3f3f3;
+  color: #333;
+  text-indent: 10px;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+#HistoryPanelBody {
+  position: relative;
+  width: 525px;
+  z-index: 0;
+  top: -40px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  height: 1060px;
+  /* overflow: auto; */
+  background: #f6f6f6;
+}
+#HistoryPanelContent {
+  height: 1020px;
+  overflow: auto;
+}
+
+
+.HistoryLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(to right,#f3f3f3,#333, #f3f3f3) 1 10;
+}
+.HistorySplitLine {
+  height: 150px;
+  width: 1px;
+  background: #333;
+}
+.HistoryItem {
+  margin: 5px;
+  background: #eee;
+}
+
+#InfoText {
+  font-style: italic;
+  text-align: center;
+  /* background: #eee; */
+  line-height: 40px;
+  font-size: 18px;
+  /* height: 1020px; */
+}
+
+.scroll-box::-webkit-scrollbar {  
+  width: 8px;  
+}  
+.scroll-box::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color:#f6f1f1;
+}
+.scroll-box::-webkit-scrollbar-thumb {  
+  border-radius: 10px;  
+  background-color:#a6a3a3;
+} 

@@ -1,0 +1,59 @@
+#sketcher-svg {
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+#sketcher-svg:not(.active):not(.ctrl) {
+    cursor: crosshair;
+}
+
+#sketcher-svg path.link {
+    fill: none;
+    stroke: rgb(165, 165, 165);
+    stroke-width: 4px;
+    cursor: default;
+}
+
+#sketcher-svg:not(.active):not(.ctrl) path.link {
+    cursor: pointer;
+}
+
+#sketcher-svg path.link.selected {
+    stroke-dasharray: 10, 2;
+}
+
+#sketcher-svg path.link.dragline {
+    pointer-events: none;
+}
+
+#sketcher-svg path.link.hidden {
+    stroke-width: 0;
+}
+
+#sketcher-svg circle.node {
+    stroke-width: 1.5px;
+    cursor: pointer;
+}
+
+/* #sketcher-svg circle.node.reflexive { */
+
+/* stroke: #000 !important; */
+
+/* stroke-width: 2.5px; */
+
+/* } */
+
+#sketcher-svg text {
+    font: 12px sans-serif;
+    pointer-events: none;
+    fill: white;
+}
+
+#sketcher-svg text.id {
+    text-anchor: middle;
+    font-weight: bold;
+}
