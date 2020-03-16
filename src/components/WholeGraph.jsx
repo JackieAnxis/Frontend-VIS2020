@@ -77,7 +77,6 @@ class WholeGraph extends React.Component {
 
     draw = () => {
         let _this = this;
-        let markers = this.state.markers;
         if (!this.props.graph || !this.props.graph.nodes) {
             return;
         }
@@ -122,10 +121,14 @@ class WholeGraph extends React.Component {
             .attr('cy', d => d.y)
             .attr("fill", configs.node.color)
             .attr("id", d => `node-${d.id}`)
+            .on("dblclick", cancelAll)
             .on("click", clickMarker)
+            
         function clickMarker (node) {
+          d3.event.stopPropagation();
           let target = d3.event.target;
           const nodeId = node.id;
+          let markers = _this.state.markers;
           const pos = markers.indexOf(nodeId);
           if (pos < 0) {
             markers.push(nodeId);
@@ -138,6 +141,23 @@ class WholeGraph extends React.Component {
             markers: markers
           })
         }
+
+        function cancelAll() {
+          console.log("111")
+          if (_this.props.subGraph) {
+            for (const node of _this.props.subGraph) {
+              svg.select(`#node-${node.id}`).classed('selected', false);
+            }
+          } else {
+            for (const nodeid of _this.state.markers) {
+              svg.select(`#node-${nodeid}`).classed('selected', false);
+            }
+          }
+          _this.setState({
+            markers: []
+          })
+        }
+
         const lasso_start = function () {
             this.lasso.items()
                 // .attr("r", 7)
@@ -185,7 +205,7 @@ class WholeGraph extends React.Component {
         .scaleExtent([1, 8])
         .on("zoom", zoomed);
 
-        svg.call(this.zoom);
+        svg.call(this.zoom).on('dblclick.zoom', null);
         // zoom
         function zoomed() {
             link.attr("transform", d3.event.transform);
@@ -244,6 +264,7 @@ class WholeGraph extends React.Component {
                                 icon='download'
                                 size='large'
                             />
+                            {/* 临时的按钮 */}
                             <Button
                               onClick={this.onGenerateSubgraph}
                             >Get Exemplar</Button>
