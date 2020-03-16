@@ -3,6 +3,7 @@ import { GOT_WHOLE_GRAPH } from '../actions/wholeGraph';
 const initWholeGraph = {
     name: '',
     graph: null,
+    lassoType: 'source',
 }
 
 export function wholeGraph(state = initWholeGraph, action) {

@@ -9,6 +9,7 @@ import Header from './Header'
 import { Button } from 'antd'
 import './common.css'
 import './lasso.css'
+import { setLassoResult } from '../actions/wholeGraph'
 
 window.d3 = d3 // NOTE: d3-lasso need global d3, f**k
 
@@ -27,16 +28,18 @@ const configs = {
 }
 
 class WholeGraph extends React.Component {
-    constructor() {
-      super();
-      this.state = {
-        markers: [],
-        graphName: ''
-      }
+    constructor(props) {
+        super(props);
+        this.svgRef = React.createRef();
+        this.lasso = null;
+        this.zoom = null;
+        this.state = {
+          markers: [],
+          graphName: ''
+        }
     }
     componentDidMount() {
         this.props.dispatch(requestWholeGraph())
-        this.svgRef = React.createRef()
     }
     componentDidUpdate() {
       if(this.props.name !== this.state.graphName) {
@@ -57,6 +60,19 @@ class WholeGraph extends React.Component {
           svg.select(`#node-${node.id}`).classed('selected', true)
         }
       }
+    }
+
+    toggleLasso = (enable) => {
+        const svg = d3.select(this.svgRef.current);
+        if (enable) {
+            svg.on('.zoom', null);
+            svg.call(this.lasso);
+        } else {
+            svg.call(this.zoom);
+            svg.on('.dragstart', null);
+            svg.on('.drag', null);
+            svg.on('.dragend', null);
+        }
     }
 
     draw = () => {
@@ -123,49 +139,54 @@ class WholeGraph extends React.Component {
           })
         }
         const lasso_start = function () {
-            lasso.items()
+            this.lasso.items()
                 // .attr("r", 7)
                 .classed("not_possible", true)
                 .classed("selected", false);
         };
 
         const lasso_draw = function () {
-            lasso.possibleItems()
+            this.lasso.possibleItems()
                 .classed("not_possible", false)
                 .classed("possible", true);
-            lasso.notPossibleItems()
+            this.lasso.notPossibleItems()
                 .classed("not_possible", true)
                 .classed("possible", false);
         };
 
         const lasso_end = function () {
-            lasso.items()
+            this.lasso.items()
                 .classed("not_possible", false)
                 .classed("possible", false);
-            lasso.selectedItems()
+            this.lasso.selectedItems()
                 .classed("selected", true)
                 .attr("r", 7);
-            lasso.notSelectedItems()
+            this.lasso.notSelectedItems()
                 .attr("r", configs.node.r);
+
+            const items = this.lasso.selectedItems().data();
+            this.props.dispatch(setLassoResult(items, this.props.lassoType));
         };
 
-        const lasso = d3Lasso()
+        this.lasso = d3Lasso()
             .closePathDistance(305)
             .closePathSelect(true)
             .targetArea(svg)
             .items(node)
-            .on("start", lasso_start)
-            .on("draw", lasso_draw)
-            .on("end", lasso_end);
+            .on("start", lasso_start.bind(this))
+            .on("draw", lasso_draw.bind(this))
+            .on("end", lasso_end.bind(this));
 
-        // svg.call(lasso);
 
-        
+        // lasso, init disable
+        // svg.call(this.lasso);
+        this.zoom = d3.zoom()
+        .extent([[0, 0], [configs.width, configs.height]])
+        .scaleExtent([1, 8])
+        .on("zoom", zoomed);
+
+        svg.call(this.zoom);
         // zoom
-        svg.call(d3.zoom()
-            .extent([[0, 0], [configs.width, configs.height]])
-            .scaleExtent([1, 8])
-            .on("zoom", zoomed));
         function zoomed() {
             link.attr("transform", d3.event.transform);
             node.attr("transform", d3.event.transform);
@@ -181,12 +202,25 @@ class WholeGraph extends React.Component {
 
     render() {
         return (
-            <div style={{
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                width: 1900, // 1920 - 20
-            }}>
+            <div
+                tabIndex={'0'}
+                onKeyDown={(e) => {
+                    if (e.shiftKey) {
+                        this.toggleLasso(true);
+                    }
+                }}
+                onKeyUp={(e) => {
+                    if (!e.shiftKey) {
+                        this.toggleLasso(false);
+                    }
+                }}
+                style={{
+                    position: 'absolute',
+                    top: 10,
+                    left: 10,
+                    width: 1900, // 1920 - 20
+                }}
+            >
                 <Header title="NODE-LINK VIEW" />
                 <div className='container'>
                     <svg ref={this.svgRef}></svg>
