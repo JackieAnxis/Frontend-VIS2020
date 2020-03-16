@@ -73,6 +73,16 @@ class WholeGraph extends React.Component {
             .attr('cx', d => d.x)
             .attr('cy', d => d.y)
             .attr("fill", configs.node.color)
+
+        // zoom
+        svg.call(d3.zoom()
+            .extent([[0, 0], [configs.width, configs.height]])
+            .scaleExtent([1, 8])
+            .on("zoom", zoomed));
+        function zoomed() {
+            link.attr("transform", d3.event.transform);
+            node.attr("transform", d3.event.transform);
+        }
     }
 
     render() {
