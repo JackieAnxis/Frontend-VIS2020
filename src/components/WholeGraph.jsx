@@ -5,10 +5,10 @@ import { lasso as d3Lasso } from 'd3-lasso'
 import { requestWholeGraph } from '../actions/wholeGraph'
 import { GraphTransformer } from '../utils/vis'
 import Header from './Header'
-import { Button } from 'antd'
+import { Button, Switch } from 'antd'
 import './common.css'
 import './lasso.css'
-import { setLassoResult } from '../actions/wholeGraph'
+import { setLassoResult, switchLassoType } from '../actions/wholeGraph'
 
 window.d3 = d3 // NOTE: d3-lasso need global d3, f**k
 
@@ -216,6 +216,22 @@ class WholeGraph extends React.Component {
                             <br />
                             <span>#link: {this.props.graph.links.length}</span>
                         </div>
+                    }
+                    {
+                        // Lasso switcher
+                        <Switch
+                            style={{
+                                position: 'absolute',
+                                top: 20,
+                                right: 20,
+                            }}
+                            checkedChildren="exemplar"
+                            unCheckedChildren="sketcher"
+                            checked={this.props.lassoType === 'source'}
+                            onChange={(checked) => {
+                                this.props.dispatch(switchLassoType(checked))
+                            }}
+                        />
                     }
                 </div>
             </div>

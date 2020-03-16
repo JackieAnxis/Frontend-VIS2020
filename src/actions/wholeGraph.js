@@ -2,6 +2,14 @@ import { backendAddress } from '../configs'
 export const REQUEST_WHOLE_GRAPH = 'REQUEST_WHOLE_GRAPH';
 export const GOT_WHOLE_GRAPH = 'GOT_WHOLE_GRAPH';
 export const SET_LASSO_RESULT = 'SET_LASSO_RESULT';
+export const SWITCH_LASSO_TYPE = 'SWITCH_LASSO_TYPE';
+
+export function switchLassoType(isSource) {
+    return {
+        type: SWITCH_LASSO_TYPE,
+        lassoType: isSource ? 'source' : 'target'
+    }
+}
 
 export function setLassoResult(data, lassoType) {
     return {
