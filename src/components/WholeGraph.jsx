@@ -6,10 +6,10 @@ import { requestWholeGraph } from '../actions/wholeGraph'
 import { generateSubgraph } from '../actions/subGraph'
 import { GraphTransformer } from '../utils/vis'
 import Header from './Header'
-import { Button } from 'antd'
+import { Button, Switch } from 'antd'
 import './common.css'
 import './lasso.css'
-import { setLassoResult } from '../actions/wholeGraph'
+import { setLassoResult, switchLassoType } from '../actions/wholeGraph'
 
 window.d3 = d3 // NOTE: d3-lasso need global d3, f**k
 
@@ -34,32 +34,34 @@ class WholeGraph extends React.Component {
         this.lasso = null;
         this.zoom = null;
         this.state = {
-          markers: [],
-          graphName: ''
+            markers: [],
+            graphName: ''
         }
     }
     componentDidMount() {
         this.props.dispatch(requestWholeGraph())
     }
     componentDidUpdate() {
-      if(this.props.name !== this.state.graphName) {
-        this.draw();
-        console.log("update")
-        this.setState({
-          graphName: this.props.name
-        })
-      }
+        if (this.props.name !== this.state.graphName) {
+            this.draw();
+            console.log("update")
+            this.setState({
+                graphName: this.props.name
+            })
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-      // 如果已经加载了图
-      if (this.state.graphName) {
-        let subGraph = nextProps.subGraph;
-        const svg = d3.select(this.svgRef.current);
-        for (const node of subGraph) {
-          svg.select(`#node-${node.id}`).classed('selected', true)
+        // 如果已经加载了图
+        if (this.state.graphName) {
+            let subGraph = nextProps.subGraph;
+            if (subGraph) {
+                const svg = d3.select(this.svgRef.current);
+                for (const node of subGraph) {
+                    svg.select(`#node-${node.id}`).classed('selected', true)
+                }
+            }
         }
-      }
     }
 
     toggleLasso = (enable) => {
@@ -143,7 +145,6 @@ class WholeGraph extends React.Component {
         }
 
         function cancelAll() {
-          console.log("111")
           if (_this.props.subGraph) {
             for (const node of _this.props.subGraph) {
               svg.select(`#node-${node.id}`).classed('selected', false);
@@ -201,9 +202,9 @@ class WholeGraph extends React.Component {
         // lasso, init disable
         // svg.call(this.lasso);
         this.zoom = d3.zoom()
-        .extent([[0, 0], [configs.width, configs.height]])
-        .scaleExtent([1, 8])
-        .on("zoom", zoomed);
+            .extent([[0, 0], [configs.width, configs.height]])
+            .scaleExtent([1, 8])
+            .on("zoom", zoomed);
 
         svg.call(this.zoom).on('dblclick.zoom', null);
         // zoom
@@ -211,13 +212,13 @@ class WholeGraph extends React.Component {
             link.attr("transform", d3.event.transform);
             node.attr("transform", d3.event.transform);
         }
-        
+
     }
 
     onGenerateSubgraph = () => {
-      this.props.dispatch(generateSubgraph({
-        markers: this.state.markers
-      }))
+        this.props.dispatch(generateSubgraph({
+            markers: this.state.markers
+        }))
     }
 
     render() {
@@ -266,7 +267,7 @@ class WholeGraph extends React.Component {
                             />
                             {/* 临时的按钮 */}
                             <Button
-                              onClick={this.onGenerateSubgraph}
+                                onClick={this.onGenerateSubgraph}
                             >Get Exemplar</Button>
                         </div>
                     }
@@ -286,6 +287,22 @@ class WholeGraph extends React.Component {
                             <span>#link: {this.props.graph.links.length}</span>
                         </div>
                     }
+                    {
+                        // Lasso switcher
+                        <Switch
+                            style={{
+                                position: 'absolute',
+                                top: 20,
+                                right: 20,
+                            }}
+                            checkedChildren="exemplar"
+                            unCheckedChildren="sketcher"
+                            checked={this.props.lassoType === 'source'}
+                            onChange={(checked) => {
+                                this.props.dispatch(switchLassoType(checked))
+                            }}
+                        />
+                    }
                 </div>
             </div>
         )
@@ -294,8 +311,8 @@ class WholeGraph extends React.Component {
 
 function mapStateToProps(state) {
     return {
-      ...state.wholeGraph,
-      subGraph: state.subGraph.data
+        ...state.wholeGraph,
+        subGraph: state.subGraph.data
     }
 }
 

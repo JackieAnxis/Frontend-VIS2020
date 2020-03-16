@@ -1,4 +1,4 @@
-import { GOT_WHOLE_GRAPH } from '../actions/wholeGraph';
+import { GOT_WHOLE_GRAPH, SWITCH_LASSO_TYPE } from '../actions/wholeGraph';
 
 const initWholeGraph = {
     name: '',
@@ -12,6 +12,10 @@ export function wholeGraph(state = initWholeGraph, action) {
             return Object.assign({}, state, {
                 name: action.data.name,
                 graph: action.data.data,
+            });
+        case SWITCH_LASSO_TYPE:
+            return Object.assign({}, state, {
+                lassoType: action.lassoType
             });
         default:
             return state;
