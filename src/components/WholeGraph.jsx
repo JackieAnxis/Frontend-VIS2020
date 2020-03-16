@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import * as d3 from 'd3'
 import { requestWholeGraph } from '../actions/wholeGraph'
 import { GraphTransformer } from '../utils/vis'
+import { Button } from 'antd'
 
 const configs = {
     width: 1920,
@@ -76,7 +77,27 @@ class WholeGraph extends React.Component {
         return (
             <div>
                 <svg ref={this.svgRef}></svg>
+                <div style={{
+                    position: "absolute",
+                    top: 20,
+                    left: 20
+                }}>
+                    <Button
+                        shape='circle'
+                        icon='upload'
+                        size='large'
+                        style={{
+                            marginRight: 5,
+                        }}
+                    />
+                    <Button
+                        shape='circle'
+                        icon='download'
+                        size='large'
+                    />
+                </div>
                 {
+                    // Data information
                     this.props.graph &&
                     <div style={{
                         position: 'absolute',
@@ -85,9 +106,9 @@ class WholeGraph extends React.Component {
                         fontSize: 18,
                     }}>
                         <span>dataset: {this.props.name}</span>
-                        <br/>
+                        <br />
                         <span>#node: {this.props.graph.nodes.length}</span>
-                        <br/>
+                        <br />
                         <span>#link: {this.props.graph.links.length}</span>
                     </div>
                 }
