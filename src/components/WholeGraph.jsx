@@ -34,32 +34,34 @@ class WholeGraph extends React.Component {
         this.lasso = null;
         this.zoom = null;
         this.state = {
-          markers: [],
-          graphName: ''
+            markers: [],
+            graphName: ''
         }
     }
     componentDidMount() {
         this.props.dispatch(requestWholeGraph())
     }
     componentDidUpdate() {
-      if(this.props.name !== this.state.graphName) {
-        this.draw();
-        console.log("update")
-        this.setState({
-          graphName: this.props.name
-        })
-      }
+        if (this.props.name !== this.state.graphName) {
+            this.draw();
+            console.log("update")
+            this.setState({
+                graphName: this.props.name
+            })
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-      // 如果已经加载了图
-      if (this.state.graphName) {
-        let subGraph = nextProps.subGraph;
-        const svg = d3.select(this.svgRef.current);
-        for (const node of subGraph) {
-          svg.select(`#node-${node.id}`).classed('selected', true)
+        // 如果已经加载了图
+        if (this.state.graphName) {
+            let subGraph = nextProps.subGraph;
+            if (subGraph) {
+                const svg = d3.select(this.svgRef.current);
+                for (const node of subGraph) {
+                    svg.select(`#node-${node.id}`).classed('selected', true)
+                }
+            }
         }
-      }
     }
 
     toggleLasso = (enable) => {
@@ -123,20 +125,20 @@ class WholeGraph extends React.Component {
             .attr("fill", configs.node.color)
             .attr("id", d => `node-${d.id}`)
             .on("click", clickMarker)
-        function clickMarker (node) {
-          let target = d3.event.target;
-          const nodeId = node.id;
-          const pos = markers.indexOf(nodeId);
-          if (pos < 0) {
-            markers.push(nodeId);
-            d3.select(target).classed("selected", true);
-          } else {
-            markers.splice(pos, 1);
-            d3.select(target).classed("selected", false);
-          }
-          _this.setState({
-            markers: markers
-          })
+        function clickMarker(node) {
+            let target = d3.event.target;
+            const nodeId = node.id;
+            const pos = markers.indexOf(nodeId);
+            if (pos < 0) {
+                markers.push(nodeId);
+                d3.select(target).classed("selected", true);
+            } else {
+                markers.splice(pos, 1);
+                d3.select(target).classed("selected", false);
+            }
+            _this.setState({
+                markers: markers
+            })
         }
         const lasso_start = function () {
             this.lasso.items()
@@ -181,9 +183,9 @@ class WholeGraph extends React.Component {
         // lasso, init disable
         // svg.call(this.lasso);
         this.zoom = d3.zoom()
-        .extent([[0, 0], [configs.width, configs.height]])
-        .scaleExtent([1, 8])
-        .on("zoom", zoomed);
+            .extent([[0, 0], [configs.width, configs.height]])
+            .scaleExtent([1, 8])
+            .on("zoom", zoomed);
 
         svg.call(this.zoom);
         // zoom
@@ -191,13 +193,13 @@ class WholeGraph extends React.Component {
             link.attr("transform", d3.event.transform);
             node.attr("transform", d3.event.transform);
         }
-        
+
     }
 
     onGenerateSubgraph = () => {
-      this.props.dispatch(generateSubgraph({
-        markers: this.state.markers
-      }))
+        this.props.dispatch(generateSubgraph({
+            markers: this.state.markers
+        }))
     }
 
     render() {
@@ -245,7 +247,7 @@ class WholeGraph extends React.Component {
                                 size='large'
                             />
                             <Button
-                              onClick={this.onGenerateSubgraph}
+                                onClick={this.onGenerateSubgraph}
                             >Get Exemplar</Button>
                         </div>
                     }
@@ -289,8 +291,8 @@ class WholeGraph extends React.Component {
 
 function mapStateToProps(state) {
     return {
-      ...state.wholeGraph,
-      subGraph: state.subGraph.data
+        ...state.wholeGraph,
+        subGraph: state.subGraph.data
     }
 }
 
