@@ -76,6 +76,21 @@ class WholeGraph extends React.Component {
         return (
             <div>
                 <svg ref={this.svgRef}></svg>
+                {
+                    this.props.graph &&
+                    <div style={{
+                        position: 'absolute',
+                        bottom: 20,
+                        right: 20,
+                        fontSize: 18,
+                    }}>
+                        <span>dataset: {this.props.name}</span>
+                        <br/>
+                        <span>#node: {this.props.graph.nodes.length}</span>
+                        <br/>
+                        <span>#link: {this.props.graph.links.length}</span>
+                    </div>
+                }
             </div>
         )
     }
