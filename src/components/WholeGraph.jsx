@@ -30,6 +30,7 @@ class WholeGraph extends React.Component {
         super(props);
         this.svgRef = React.createRef();
         this.lasso = null;
+        this.zoom = null;
     }
     componentDidMount() {
         this.props.dispatch(requestWholeGraph())
@@ -41,8 +42,10 @@ class WholeGraph extends React.Component {
     toggleLasso = (enable) => {
         const svg = d3.select(this.svgRef.current);
         if (enable) {
+            svg.on('.zoom', null);
             svg.call(this.lasso);
         } else {
+            svg.call(this.zoom);
             svg.on('.dragstart', null);
             svg.on('.drag', null);
             svg.on('.dragend', null);
@@ -131,27 +134,44 @@ class WholeGraph extends React.Component {
             .on("end", lasso_end.bind(this));
 
 
-        svg.call(this.lasso);
+        // lasso, init disable
+        // svg.call(this.lasso);
 
         // zoom
-        svg.call(d3.zoom()
-            .extent([[0, 0], [configs.width, configs.height]])
-            .scaleExtent([1, 8])
-            .on("zoom", zoomed));
         function zoomed() {
             link.attr("transform", d3.event.transform);
             node.attr("transform", d3.event.transform);
         }
+
+        this.zoom = d3.zoom()
+            .extent([[0, 0], [configs.width, configs.height]])
+            .scaleExtent([1, 8])
+            .on("zoom", zoomed);
+
+        svg.call(this.zoom);
     }
 
     render() {
         return (
-            <div style={{
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                width: 1900, // 1920 - 20
-            }}>
+            <div
+                tabIndex={'0'}
+                onKeyDown={(e) => {
+                    if (e.shiftKey) {
+                        this.toggleLasso(true);
+                    }
+                }}
+                onKeyUp={(e) => {
+                    if (!e.shiftKey) {
+                        this.toggleLasso(false);
+                    }
+                }}
+                style={{
+                    position: 'absolute',
+                    top: 10,
+                    left: 10,
+                    width: 1900, // 1920 - 20
+                }}
+            >
                 <Header title="NODE-LINK VIEW" />
                 <div className='container'>
                     <svg ref={this.svgRef}></svg>
