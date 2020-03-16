@@ -8,6 +8,7 @@ import Header from './Header'
 import { Button } from 'antd'
 import './common.css'
 import './lasso.css'
+import { setLassoResult } from '../actions/wholeGraph'
 
 window.d3 = d3 // NOTE: d3-lasso need global d3, f**k
 
@@ -122,6 +123,9 @@ class WholeGraph extends React.Component {
                 .attr("r", 7);
             this.lasso.notSelectedItems()
                 .attr("r", configs.node.r);
+
+            const items = this.lasso.selectedItems().data();
+            this.props.dispatch(setLassoResult(items, this.props.lassoType));
         };
 
         this.lasso = d3Lasso()
