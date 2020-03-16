@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import * as d3 from 'd3'
 import { lasso as d3Lasso } from 'd3-lasso'
 import { requestWholeGraph } from '../actions/wholeGraph'
+import { generateSubgraph } from '../actions/subGraph'
 import { GraphTransformer } from '../utils/vis'
 import Header from './Header'
 import { Button } from 'antd'
@@ -26,15 +27,41 @@ const configs = {
 }
 
 class WholeGraph extends React.Component {
+    constructor() {
+      super();
+      this.state = {
+        markers: [],
+        graphName: ''
+      }
+    }
     componentDidMount() {
         this.props.dispatch(requestWholeGraph())
         this.svgRef = React.createRef()
     }
     componentDidUpdate() {
+      if(this.props.name !== this.state.graphName) {
         this.draw();
+        console.log("update")
+        this.setState({
+          graphName: this.props.name
+        })
+      }
+    }
+
+    componentWillReceiveProps(nextProps) {
+      // 如果已经加载了图
+      if (this.state.graphName) {
+        let subGraph = nextProps.subGraph;
+        const svg = d3.select(this.svgRef.current);
+        for (const node of subGraph) {
+          svg.select(`#node-${node.id}`).classed('selected', true)
+        }
+      }
     }
 
     draw = () => {
+        let _this = this;
+        let markers = this.state.markers;
         if (!this.props.graph || !this.props.graph.nodes) {
             return;
         }
@@ -78,7 +105,23 @@ class WholeGraph extends React.Component {
             .attr('cx', d => d.x)
             .attr('cy', d => d.y)
             .attr("fill", configs.node.color)
-
+            .attr("id", d => `node-${d.id}`)
+            .on("click", clickMarker)
+        function clickMarker (node) {
+          let target = d3.event.target;
+          const nodeId = node.id;
+          const pos = markers.indexOf(nodeId);
+          if (pos < 0) {
+            markers.push(nodeId);
+            d3.select(target).classed("selected", true);
+          } else {
+            markers.splice(pos, 1);
+            d3.select(target).classed("selected", false);
+          }
+          _this.setState({
+            markers: markers
+          })
+        }
         const lasso_start = function () {
             lasso.items()
                 // .attr("r", 7)
@@ -115,9 +158,9 @@ class WholeGraph extends React.Component {
             .on("draw", lasso_draw)
             .on("end", lasso_end);
 
-        svg.call(lasso);
+        // svg.call(lasso);
 
-        /*
+        
         // zoom
         svg.call(d3.zoom()
             .extent([[0, 0], [configs.width, configs.height]])
@@ -127,7 +170,13 @@ class WholeGraph extends React.Component {
             link.attr("transform", d3.event.transform);
             node.attr("transform", d3.event.transform);
         }
-        */
+        
+    }
+
+    onGenerateSubgraph = () => {
+      this.props.dispatch(generateSubgraph({
+        markers: this.state.markers
+      }))
     }
 
     render() {
@@ -161,6 +210,9 @@ class WholeGraph extends React.Component {
                                 icon='download'
                                 size='large'
                             />
+                            <Button
+                              onClick={this.onGenerateSubgraph}
+                            >Get Exemplar</Button>
                         </div>
                     }
                     {
@@ -186,7 +238,10 @@ class WholeGraph extends React.Component {
 }
 
 function mapStateToProps(state) {
-    return state.wholeGraph
+    return {
+      ...state.wholeGraph,
+      subGraph: state.subGraph.data
+    }
 }
 
 export default connect(mapStateToProps)(WholeGraph)
