@@ -86,25 +86,28 @@ class WholeGraph extends React.Component {
                 <Header title="NODE-LINK VIEW" />
                 <div className='container'>
                     <svg ref={this.svgRef}></svg>
-                    <div style={{
-                        position: "absolute",
-                        top: 20,
-                        left: 20
-                    }}>
-                        <Button
-                            shape='circle'
-                            icon='upload'
-                            size='large'
-                            style={{
-                                marginRight: 5,
-                            }}
-                        />
-                        <Button
-                            shape='circle'
-                            icon='download'
-                            size='large'
-                        />
-                    </div>
+                    {
+                        // upload&download button
+                        <div style={{
+                            position: "absolute",
+                            top: 20,
+                            left: 20
+                        }}>
+                            <Button
+                                shape='circle'
+                                icon='upload'
+                                size='large'
+                                style={{
+                                    marginRight: 5,
+                                }}
+                            />
+                            <Button
+                                shape='circle'
+                                icon='download'
+                                size='large'
+                            />
+                        </div>
+                    }
                     {
                         // Data information
                         this.props.graph &&
