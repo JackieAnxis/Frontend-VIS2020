@@ -26,12 +26,27 @@ const configs = {
 }
 
 class WholeGraph extends React.Component {
+    constructor(props) {
+        super(props);
+        this.svgRef = React.createRef();
+        this.lasso = null;
+    }
     componentDidMount() {
         this.props.dispatch(requestWholeGraph())
-        this.svgRef = React.createRef()
     }
     componentDidUpdate() {
         this.draw();
+    }
+
+    toggleLasso = (enable) => {
+        const svg = d3.select(this.svgRef.current);
+        if (enable) {
+            svg.call(this.lasso);
+        } else {
+            svg.on('.dragstart', null);
+            svg.on('.drag', null);
+            svg.on('.dragend', null);
+        }
     }
 
     draw = () => {
@@ -80,44 +95,44 @@ class WholeGraph extends React.Component {
             .attr("fill", configs.node.color)
 
         const lasso_start = function () {
-            lasso.items()
+            this.lasso.items()
                 // .attr("r", 7)
                 .classed("not_possible", true)
                 .classed("selected", false);
         };
 
         const lasso_draw = function () {
-            lasso.possibleItems()
+            this.lasso.possibleItems()
                 .classed("not_possible", false)
                 .classed("possible", true);
-            lasso.notPossibleItems()
+            this.lasso.notPossibleItems()
                 .classed("not_possible", true)
                 .classed("possible", false);
         };
 
         const lasso_end = function () {
-            lasso.items()
+            this.lasso.items()
                 .classed("not_possible", false)
                 .classed("possible", false);
-            lasso.selectedItems()
+            this.lasso.selectedItems()
                 .classed("selected", true)
                 .attr("r", 7);
-            lasso.notSelectedItems()
+            this.lasso.notSelectedItems()
                 .attr("r", configs.node.r);
         };
 
-        const lasso = d3Lasso()
+        this.lasso = d3Lasso()
             .closePathDistance(305)
             .closePathSelect(true)
             .targetArea(svg)
             .items(node)
-            .on("start", lasso_start)
-            .on("draw", lasso_draw)
-            .on("end", lasso_end);
+            .on("start", lasso_start.bind(this))
+            .on("draw", lasso_draw.bind(this))
+            .on("end", lasso_end.bind(this));
 
-        svg.call(lasso);
 
-        /*
+        svg.call(this.lasso);
+
         // zoom
         svg.call(d3.zoom()
             .extent([[0, 0], [configs.width, configs.height]])
@@ -127,7 +142,6 @@ class WholeGraph extends React.Component {
             link.attr("transform", d3.event.transform);
             node.attr("transform", d3.event.transform);
         }
-        */
     }
 
     render() {
