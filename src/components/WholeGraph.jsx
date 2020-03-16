@@ -1,11 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as d3 from 'd3'
+import { lasso as d3Lasso } from 'd3-lasso'
 import { requestWholeGraph } from '../actions/wholeGraph'
 import { GraphTransformer } from '../utils/vis'
 import Header from './Header'
 import { Button } from 'antd'
 import './common.css'
+import './lasso.css'
+
+window.d3 = d3 // NOTE: d3-lasso need global d3, f**k
 
 const configs = {
     width: 1900, // 1920 - 20
@@ -74,6 +78,48 @@ class WholeGraph extends React.Component {
             .attr('cy', d => d.y)
             .attr("fill", configs.node.color)
 
+        const lasso_start = function () {
+            console.log('start')
+            lasso.items()
+                .attr("r", 7)
+                .classed("not_possible", true)
+                .classed("selected", false);
+        };
+
+        const lasso_draw = function () {
+            console.log('draw')
+            lasso.possibleItems()
+                .classed("not_possible", false)
+                .classed("possible", true);
+            lasso.notPossibleItems()
+                .classed("not_possible", true)
+                .classed("possible", false);
+        };
+
+        const lasso_end = function () {
+            console.log('end')
+            lasso.items()
+                .classed("not_possible", false)
+                .classed("possible", false);
+            lasso.selectedItems()
+                .classed("selected", true)
+                .attr("r", 7);
+            lasso.notSelectedItems()
+                .attr("r", 3.5);
+        };
+
+        const lasso = d3Lasso()
+            .closePathDistance(305)
+            .closePathSelect(true)
+            .targetArea(svg)
+            .items(node)
+            .on("start", lasso_start)
+            .on("draw", lasso_draw)
+            .on("end", lasso_end);
+
+        svg.call(lasso);
+
+        /*
         // zoom
         svg.call(d3.zoom()
             .extent([[0, 0], [configs.width, configs.height]])
@@ -83,6 +129,7 @@ class WholeGraph extends React.Component {
             link.attr("transform", d3.event.transform);
             node.attr("transform", d3.event.transform);
         }
+        */
     }
 
     render() {
