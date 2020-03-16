@@ -3,11 +3,13 @@ import { connect } from 'react-redux'
 import * as d3 from 'd3'
 import { requestWholeGraph } from '../actions/wholeGraph'
 import { GraphTransformer } from '../utils/vis'
+import Header from './Header'
 import { Button } from 'antd'
+import './common.css'
 
 const configs = {
-    width: 1920,
-    height: 1080,
+    width: 1900, // 1920 - 20
+    height: 1020, // 1080 - 40 - 20
     bgColor: 'rgba(238, 238, 238, 1)',
     node: {
         color: 'rgba(36, 144, 200, 0.5)'
@@ -75,43 +77,51 @@ class WholeGraph extends React.Component {
 
     render() {
         return (
-            <div>
-                <svg ref={this.svgRef}></svg>
-                <div style={{
-                    position: "absolute",
-                    top: 20,
-                    left: 20
-                }}>
-                    <Button
-                        shape='circle'
-                        icon='upload'
-                        size='large'
-                        style={{
-                            marginRight: 5,
-                        }}
-                    />
-                    <Button
-                        shape='circle'
-                        icon='download'
-                        size='large'
-                    />
-                </div>
-                {
-                    // Data information
-                    this.props.graph &&
+            <div style={{
+                position: 'absolute',
+                top: 10,
+                left: 10,
+                width: 1900, // 1920 - 20
+            }}>
+                <Header title="NODE-LINK VIEW" />
+                <div className='container'>
+                    <svg ref={this.svgRef}></svg>
                     <div style={{
-                        position: 'absolute',
-                        bottom: 20,
-                        right: 20,
-                        fontSize: 18,
+                        position: "absolute",
+                        top: 20,
+                        left: 20
                     }}>
-                        <span>dataset: {this.props.name}</span>
-                        <br />
-                        <span>#node: {this.props.graph.nodes.length}</span>
-                        <br />
-                        <span>#link: {this.props.graph.links.length}</span>
+                        <Button
+                            shape='circle'
+                            icon='upload'
+                            size='large'
+                            style={{
+                                marginRight: 5,
+                            }}
+                        />
+                        <Button
+                            shape='circle'
+                            icon='download'
+                            size='large'
+                        />
                     </div>
-                }
+                    {
+                        // Data information
+                        this.props.graph &&
+                        <div style={{
+                            position: 'absolute',
+                            bottom: 20,
+                            right: 20,
+                            fontSize: 18,
+                        }}>
+                            <span>dataset: {this.props.name}</span>
+                            <br />
+                            <span>#node: {this.props.graph.nodes.length}</span>
+                            <br />
+                            <span>#link: {this.props.graph.links.length}</span>
+                        </div>
+                    }
+                </div>
             </div>
         )
     }

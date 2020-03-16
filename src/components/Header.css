@@ -1,0 +1,15 @@
+.header-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 40px;
+    width: 100%;
+    background-color: #cacaca;
+    font-weight: 800;
+    line-height: 40px;
+    font-size: 26px;
+    color: #262d37;
+    text-indent: 10px;
+    display: flex;
+    justify-content: space-between;
+}

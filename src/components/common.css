@@ -1,0 +1,9 @@
+.top-container {
+    position: fixed;
+    background-color: #eee;
+}
+
+.container {
+    position: absolute;
+    top: 40px;
+}
