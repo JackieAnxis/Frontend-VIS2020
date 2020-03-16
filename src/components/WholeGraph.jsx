@@ -16,7 +16,8 @@ const configs = {
     height: 1020, // 1080 - 40 - 20
     bgColor: 'rgba(238, 238, 238, 1)',
     node: {
-        color: 'rgba(36, 144, 200, 0.5)'
+        color: 'rgba(36, 144, 200, 0.5)',
+        r: 5,
     },
     link: {
         color: 'rgba(153, 153, 153, 0.1)'
@@ -73,21 +74,19 @@ class WholeGraph extends React.Component {
             .selectAll("circle")
             .data(nodes)
             .join("circle")
-            .attr("r", 5)
+            .attr("r", configs.node.r)
             .attr('cx', d => d.x)
             .attr('cy', d => d.y)
             .attr("fill", configs.node.color)
 
         const lasso_start = function () {
-            console.log('start')
             lasso.items()
-                .attr("r", 7)
+                // .attr("r", 7)
                 .classed("not_possible", true)
                 .classed("selected", false);
         };
 
         const lasso_draw = function () {
-            console.log('draw')
             lasso.possibleItems()
                 .classed("not_possible", false)
                 .classed("possible", true);
@@ -97,7 +96,6 @@ class WholeGraph extends React.Component {
         };
 
         const lasso_end = function () {
-            console.log('end')
             lasso.items()
                 .classed("not_possible", false)
                 .classed("possible", false);
@@ -105,7 +103,7 @@ class WholeGraph extends React.Component {
                 .classed("selected", true)
                 .attr("r", 7);
             lasso.notSelectedItems()
-                .attr("r", 3.5);
+                .attr("r", configs.node.r);
         };
 
         const lasso = d3Lasso()

@@ -18,7 +18,7 @@
 }
 
 .not_possible {
-    fill: rgb(200, 200, 200);
+    /* fill: rgb(200, 200, 200); */
 }
 
 .possible {
@@ -26,5 +26,5 @@
 }
 
 .selected {
-    fill: steelblue;
+    fill: rgba(230, 92, 73, 1);
 }
