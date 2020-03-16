@@ -28,3 +28,6 @@
 .selected {
     fill: rgba(230, 92, 73, 1);
 }
+line.selected {
+  stroke: #EC888C;
+}

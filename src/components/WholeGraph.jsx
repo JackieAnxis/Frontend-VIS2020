@@ -57,8 +57,11 @@ class WholeGraph extends React.Component {
             let subGraph = nextProps.subGraph;
             if (subGraph) {
                 const svg = d3.select(this.svgRef.current);
-                for (const node of subGraph) {
+                for (const node of subGraph.nodes) {
                     svg.select(`#node-${node.id}`).classed('selected', true)
+                }
+                for (const link of subGraph.links) {
+                  svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
                 }
             }
         }
@@ -110,6 +113,7 @@ class WholeGraph extends React.Component {
             .attr("y1", d => nodeMap[d.source].y)
             .attr("x2", d => nodeMap[d.target].x)
             .attr("y2", d => nodeMap[d.target].y)
+            .attr("id", d => `link-${d.source}-${d.target}`)
 
         const node = svg.append("g")
             .attr('id', 'nodes')
@@ -146,8 +150,11 @@ class WholeGraph extends React.Component {
 
         function cancelAll() {
           if (_this.props.subGraph) {
-            for (const node of _this.props.subGraph) {
+            for (const node of _this.props.subGraph.nodes) {
               svg.select(`#node-${node.id}`).classed('selected', false);
+            }
+            for (const link of _this.props.subGraph.links) {
+              svg.select(`#link-${link.source}-${link.target}`).classed('selected', false)
             }
           } else {
             for (const nodeid of _this.state.markers) {
@@ -312,7 +319,7 @@ class WholeGraph extends React.Component {
 function mapStateToProps(state) {
     return {
         ...state.wholeGraph,
-        subGraph: state.subGraph.data
+        subGraph: state.subGraph
     }
 }
 
