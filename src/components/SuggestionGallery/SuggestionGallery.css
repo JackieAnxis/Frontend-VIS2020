@@ -1,0 +1,42 @@
+#SuggestionGalleryContainer {
+  position: relative;
+  top: 5px;
+  /* float: right; */
+  /* margin-right: 10px;
+  margin-top: 10px; */
+  /* font-size: 26px; */
+  /* line-height: 40px; */
+}
+
+#SuggestionGalleryContent {
+  position: relative;
+  /* width: 525px; */
+  z-index: 0;
+  /* top: -40px; */
+  border: 1px solid #333;
+  border-radius: 5px;
+  height: 592px;
+  /* overflow: auto; */
+  background: #f6f6f6;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.SuggestionLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(to right,#f3f3f3,#333, #f3f3f3) 1 10;
+}
+.scroll-box::-webkit-scrollbar {  
+  width: 8px;  
+}  
+.scroll-box::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color:#f6f1f1;
+}
+.scroll-box::-webkit-scrollbar-thumb {  
+  border-radius: 10px;  
+  background-color:#a6a3a3;
+} 
