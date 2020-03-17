@@ -114,8 +114,6 @@ function mapStateToProps(state) {
         // allMarker: state.deformation.allMarker
         exemplarType: state.wholeGraph.lassoType,
         graphsInfo: state.graphs, // NOTE: redundant, for convenience of getting markers
-        graph: state.wholeGraph.lassoType === 'source' ? state.graphs.source : state.graphs.target,
-        markers: state.wholeGraph.lassoType === 'source' ? state.graphs.sourceMarkers : state.graphs.targetMarkers
     }
 }
 

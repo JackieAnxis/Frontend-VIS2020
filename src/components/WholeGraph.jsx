@@ -374,14 +374,16 @@ class WholeGraph extends React.Component {
                 {this.props.sourceGraph && <Exemplar
                     class={'source_modified'}
                     title={'SOURCE MODIFIED'}
-                    graph={this.props.lassoType === 'source' ? this.props.source : this.props.target}
-                    markers={this.props.lassoType === 'source' ? this.props.sourceMarkers : this.props.targetMarkers}
+                    graph={this.props.lassoType === 'source' ? this.props.graphsInfo.source : this.props.graphsInfo.target}
+                    markers={this.props.lassoType === 'source' ? this.props.graphsInfo.sourceMarkers : this.props.graphsInfo.targetMarkers}
                     onDragged={this.onDraggedSource} />}
 
                 {
-                    this.props.targetModified &&
+                    // TODO: show only for debug, can safely deleted
+                    this.props.graphsInfo.targetGenerated &&
                     <Exemplar
-                        class={'targetGenerated'}
+                        class={'target_generated'}
+                        graph={this.props.graphsInfo.targetGenerated}
                     />
                 }
             </div>
@@ -393,6 +395,7 @@ function mapStateToProps(state) {
     return {
         ...state.wholeGraph,
         subGraph: state.subGraph,
+        graphsInfo: state.graphs, // NOTE: redundant, for convenience of draw differenct graph
         sourceGraph: state.graphs.source,
     }
 }
