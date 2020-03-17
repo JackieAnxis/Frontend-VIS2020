@@ -303,7 +303,7 @@ class WholeGraph extends React.Component {
                                 right: 20,
                             }}
                             checkedChildren="exemplar"
-                            unCheckedChildren="sketcher"
+                            unCheckedChildren="target"
                             checked={this.props.lassoType === 'source'}
                             onChange={(checked) => {
                                 this.props.dispatch(switchLassoType(checked))
