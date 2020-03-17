@@ -92,7 +92,8 @@ function GraphD3(props) {
       .attr('cy', d => d.y)
       // .attr("fill", (d, i) => (i < 3) ? colors[i]:'#aaa')
       .attr("fill", '#aaa')
-      .on('mousedown', function (d) {
+      .on('click', function (d) {
+        if (d3.event.defaultPrevented) return; // dragged
         if (onClickNode) {
           onClickNode(parseInt(d.id))
           labels

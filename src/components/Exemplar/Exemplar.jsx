@@ -14,7 +14,7 @@ class Exemplar extends React.Component {
         super(props)
         this.ref = React.createRef()
         this.state = {
-          saveModify: 0
+            saveModify: 0
         }
     }
 
@@ -25,10 +25,14 @@ class Exemplar extends React.Component {
     }
 
     handleSaveModify = () => {
-      let prev = this.state.saveModify + 1;
-      this.setState({
-        saveModify: prev
-      })
+        let prev = this.state.saveModify + 1;
+        this.setState({
+            saveModify: prev
+        })
+    }
+
+    onClickNode = (id) => {
+        console.log(id)
     }
 
     render() {
@@ -46,27 +50,27 @@ class Exemplar extends React.Component {
                             padding={20}
                             autoLayout={false}
                             onDragged={this.props.onDragged}
-                            // onClickNode={this.props.onClickNode}
+                            onClickNode={this.onClickNode}
                             saveModify={this.state.saveModify}
                             id={this.props.class}
                         />
                     }
                     <Button
-                      style={{
-                        position: 'absolute',
-                        bottom: 4,
-                        right: 4,
-                        color: '#aaa',
-                        border: '1px solid'
-                      }}
-                      ghost
-                      size="small"
-                      onClick={this.handleSaveModify}
+                        style={{
+                            position: 'absolute',
+                            bottom: 4,
+                            right: 4,
+                            color: '#aaa',
+                            border: '1px solid'
+                        }}
+                        ghost
+                        size="small"
+                        onClick={this.handleSaveModify}
                     >
-                      COPY
+                        COPY
                         </Button>
                 </div>
-                <ControlPanel/>
+                <ControlPanel />
                 <SuggestionGallery />
             </div>
         )
@@ -74,12 +78,12 @@ class Exemplar extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return {
-      // lassoType: state.lasso.type,
-      // graph: state.graphs.source,
-      // wholeGraphData: state.wholeGraph.graph,
-      // allMarker: state.deformation.allMarker
-  }
+    return {
+        // lassoType: state.lasso.type,
+        // graph: state.graphs.source,
+        // wholeGraphData: state.wholeGraph.graph,
+        // allMarker: state.deformation.allMarker
+    }
 }
 
 export default connect(mapStateToProps)(Exemplar);
