@@ -62,7 +62,7 @@ class WholeGraph extends React.Component {
                     svg.select(`#node-${node.id}`).classed('selected', true)
                 }
                 for (const link of subGraph.links) {
-                  svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
+                    svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
                 }
             }
         }
@@ -130,41 +130,41 @@ class WholeGraph extends React.Component {
             .attr("id", d => `node-${d.id}`)
             .on("dblclick", cancelAll)
             .on("click", clickMarker)
-            
-        function clickMarker (node) {
-          d3.event.stopPropagation();
-          let target = d3.event.target;
-          const nodeId = node.id;
-          let markers = _this.state.markers;
-          const pos = markers.indexOf(nodeId);
-          if (pos < 0) {
-            markers.push(nodeId);
-            d3.select(target).classed("selected", true);
-          } else {
-            markers.splice(pos, 1);
-            d3.select(target).classed("selected", false);
-          }
-          _this.setState({
-            markers: markers
-          })
+
+        function clickMarker(node) {
+            d3.event.stopPropagation();
+            let target = d3.event.target;
+            const nodeId = node.id;
+            let markers = _this.state.markers;
+            const pos = markers.indexOf(nodeId);
+            if (pos < 0) {
+                markers.push(nodeId);
+                d3.select(target).classed("selected", true);
+            } else {
+                markers.splice(pos, 1);
+                d3.select(target).classed("selected", false);
+            }
+            _this.setState({
+                markers: markers
+            })
         }
 
         function cancelAll() {
-          if (_this.props.subGraph) {
-            for (const node of _this.props.subGraph.nodes) {
-              svg.select(`#node-${node.id}`).classed('selected', false);
+            if (_this.props.subGraph) {
+                for (const node of _this.props.subGraph.nodes) {
+                    svg.select(`#node-${node.id}`).classed('selected', false);
+                }
+                for (const link of _this.props.subGraph.links) {
+                    svg.select(`#link-${link.source}-${link.target}`).classed('selected', false)
+                }
+            } else {
+                for (const nodeid of _this.state.markers) {
+                    svg.select(`#node-${nodeid}`).classed('selected', false);
+                }
             }
-            for (const link of _this.props.subGraph.links) {
-              svg.select(`#link-${link.source}-${link.target}`).classed('selected', false)
-            }
-          } else {
-            for (const nodeid of _this.state.markers) {
-              svg.select(`#node-${nodeid}`).classed('selected', false);
-            }
-          }
-          _this.setState({
-            markers: []
-          })
+            _this.setState({
+                markers: []
+            })
         }
 
         const lasso_start = function () {
@@ -194,12 +194,9 @@ class WholeGraph extends React.Component {
                 .attr("r", configs.node.r);
 
             const nodes = this.lasso.selectedItems().data();
-            const links = getLinkFromNodes(nodes);
+            const selectedGraph = getGraphFromNodes(nodes);
             if (nodes.length) {
-              this.props.dispatch(setLassoResult({
-                'nodes': nodes,
-                'links': links
-              }, this.props.lassoType));
+                this.props.dispatch(setLassoResult(selectedGraph, this.props.lassoType));
             }
         };
 
@@ -227,35 +224,57 @@ class WholeGraph extends React.Component {
             node.attr("transform", d3.event.transform);
         }
 
-        function getLinkFromNodes (nodes) {
-          const allLinks = _this.props.graph.links;
-          // bruce-force
-          const links = [];
-          const nodesId = nodes.map(d => d.id);
-          for (const link of allLinks) {
-            if (nodesId.indexOf(link.target) > -1 && nodesId.indexOf(link.source) > -1)
-              links.push({
-                source: link.source,
-                target: link.target,
-              })
-          }
-          // for (let outerIndex = 0; outerIndex < nodes.length - 1; outerIndex++) {
-          //     const outerNode = nodes[outerIndex];
-          //     for (let innerIndex = outerIndex; innerIndex < nodes.length; innerIndex++) {
-          //         const innerNode = nodes[innerIndex];
-          //         if (outerNode.id !== innerNode.id) {
-          //             const link = g.getLinkByEnd(outerNode.id, innerNode.id);
-          //             if (link) {
-          //                 links.push({
-          //                     source: link.source.id,
-          //                     target: link.target.id,
-          //                 });
-          //             }
-          //         }
-          //     }
-          // }
-          return links;
-      }
+        function getGraphFromNodes(nodes) {
+            const nodesId = nodes.map(d => d.id);
+            const nodesIdSet = new Set(nodesId);
+            const allLinks = _this.props.graph.links;
+            // bruce-force
+            const links = [];
+            for (const link of allLinks) {
+                if (nodesId.indexOf(link.target) > -1 && nodesId.indexOf(link.source) > -1)
+                    links.push({
+                        source: link.source,
+                        target: link.target,
+                    })
+            }
+
+            const res = {
+                nodes: _this.props.graph.nodes.filter((n) => nodesIdSet.has(n.id)),
+                links: links
+            }
+
+            return res;
+        }
+
+        function getLinkFromNodes(nodes) {
+            const allLinks = _this.props.graph.links;
+            // bruce-force
+            const links = [];
+            const nodesId = nodes.map(d => d.id);
+            for (const link of allLinks) {
+                if (nodesId.indexOf(link.target) > -1 && nodesId.indexOf(link.source) > -1)
+                    links.push({
+                        source: link.source,
+                        target: link.target,
+                    })
+            }
+            // for (let outerIndex = 0; outerIndex < nodes.length - 1; outerIndex++) {
+            //     const outerNode = nodes[outerIndex];
+            //     for (let innerIndex = outerIndex; innerIndex < nodes.length; innerIndex++) {
+            //         const innerNode = nodes[innerIndex];
+            //         if (outerNode.id !== innerNode.id) {
+            //             const link = g.getLinkByEnd(outerNode.id, innerNode.id);
+            //             if (link) {
+            //                 links.push({
+            //                     source: link.source.id,
+            //                     target: link.target.id,
+            //                 });
+            //             }
+            //         }
+            //     }
+            // }
+            return links;
+        }
 
     }
 
@@ -266,9 +285,9 @@ class WholeGraph extends React.Component {
     }
 
     onDraggedSource = (data) => {
-      // dispatch(setSourceModified(data))
+        // dispatch(setSourceModified(data))
     }
-  
+
     render() {
         return (
             <div
@@ -291,7 +310,7 @@ class WholeGraph extends React.Component {
                 }}
             >
                 <Header title="NODE-LINK VIEW" />
-                <div className='container'> 
+                <div className='container'>
                     <svg ref={this.svgRef}></svg>
                     {
                         // upload&download button
@@ -353,10 +372,10 @@ class WholeGraph extends React.Component {
                     }
                 </div>
                 {this.props.sourceGraph && <Exemplar
-                        class={'source_modified'}
-                        title={'SOURCE MODIFIED'}
-                        onDragged={this.onDraggedSource}/>}
-                
+                    class={'source_modified'}
+                    title={'SOURCE MODIFIED'}
+                    onDragged={this.onDraggedSource} />}
+
             </div>
         )
     }
