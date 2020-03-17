@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import { GraphTransformer } from '../vis';
+import { GraphTransformer } from '../utils/vis';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { setDeformationMarker, setDeformationGraph } from '../actions/deformation'

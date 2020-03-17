@@ -7,6 +7,8 @@ export function GraphTransformer(data, width, height, padding) {
     const minY = Math.min(...data.nodes.map(n => n.y));
     const maxY = Math.max(...data.nodes.map(n => n.y));
 
+    const ratio = Math.max((maxX - minX), (maxY - minY))
+
     return {
         transform,
         detransform,
@@ -14,10 +16,12 @@ export function GraphTransformer(data, width, height, padding) {
 
     function transform() {
         const transformX = val => {
-            return ((val - minX) / (maxX - minX) - 0.5) * (height - padding * 2) + (width / 2);
+            return (val - (maxX + minX) / 2) / (ratio) * (height - padding * 2) + (width / 2);
+            // return (val - minX) * ratio;
         };
         const transformY = val => {
-            return ((val - minY) / (maxY - minY) - 0.5) * (height - padding * 2) + (height / 2);
+            return (val - (maxY + minY) / 2) / (ratio) * (height - padding * 2) + (height / 2);
+            // return (val - minY) * ratio;
         };
 
         const res = JSON.parse(JSON.stringify(data));
@@ -32,10 +36,10 @@ export function GraphTransformer(data, width, height, padding) {
 
     function detransform(data) {
         const transformX = val => {
-            return ((val - width / 2) / (width - padding * 2) + 0.5) * (maxX - minX) + minX;
+            return ((val - width / 2) / (height - padding * 2)) * ratio + (maxX + minX) / 2;
         };
         const transformY = val => {
-            return ((val - height / 2) / (height - padding * 2) + 0.5) * (maxX - minX) + minY;
+            return ((val - height / 2) / (height - padding * 2)) * ratio + (maxY + minY) / 2;
         };
 
         const res = JSON.parse(JSON.stringify(data));
