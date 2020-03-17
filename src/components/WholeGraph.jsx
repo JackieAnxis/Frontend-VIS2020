@@ -343,7 +343,7 @@ class WholeGraph extends React.Component {
                                 top: 20,
                                 right: 20,
                             }}
-                            checkedChildren="exemplar"
+                            checkedChildren="source"
                             unCheckedChildren="target"
                             checked={this.props.lassoType === 'source'}
                             onChange={(checked) => {
@@ -355,7 +355,6 @@ class WholeGraph extends React.Component {
                 {this.props.sourceGraph && <Exemplar
                         class={'source_modified'}
                         title={'SOURCE MODIFIED'}
-                        graph={this.props.sourceGraph}
                         onDragged={this.onDraggedSource}/>}
                 
             </div>

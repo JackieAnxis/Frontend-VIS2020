@@ -90,6 +90,7 @@ function mapStateToProps(state) {
         // wholeGraphData: state.wholeGraph.graph,
         // allMarker: state.deformation.allMarker
         exemplarType: state.wholeGraph.lassoType,
+        graph: state.wholeGraph.lassoType === 'source' ? state.graphs.source : state.graphs.target,
         markers: state.wholeGraph.lassoType === 'source' ? state.graphs.sourceMarkers : state.graphs.targetMarkers
     }
 }
