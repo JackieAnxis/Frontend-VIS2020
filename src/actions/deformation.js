@@ -2,7 +2,7 @@ import {
   backendAddress
 } from '../configs'
 
-// import { setTargetGenerated } from './graphs'
+import { setTargetGenerated } from './graphs'
 
 export const GOT_DEFORMATION_RESULT = 'GOT_DEFORMATION_RESULT'
 export const SET_DEFORMATION_MARKER = 'SET_DEFORMATION_MARKER'
@@ -42,23 +42,23 @@ export function copyDeformationHistory(data) {
   }
 }
 
-// export function applyDeformationToSubgraph(postData) {
-//   const url = `${backendAddress}/apply-deformation`
-//   return (dispatch) => {
-//     return fetch(url, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(postData)
-//     })
-//       .then((res) => res.json())
-//       .then((data) => {
-//         // dispatch(gotDeformationResult(postData.targetGraphId, data))
-//         dispatch(setTargetGenerated(data))
-//       })
-//   }
-// }
+export function applyDeformationToSubgraph(postData) {
+  const url = `${backendAddress}/apply-deformation`
+  return (dispatch) => {
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(postData)
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // dispatch(gotDeformationResult(postData.targetGraphId, data))
+        dispatch(setTargetGenerated(data))
+      })
+  }
+}
 
 export function gotWholeGraphDeformationResult(data) {
   return {

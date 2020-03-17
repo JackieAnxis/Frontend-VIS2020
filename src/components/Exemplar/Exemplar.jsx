@@ -8,6 +8,7 @@ import SuggestionGallery from '../SuggestionGallery/SuggestionGallery'
 import '../common.css'
 import './Exemplar.css'
 import GraphD3 from '../GraphD3'
+import { applyDeformationToSubgraph } from '../../actions/deformation'
 import { addSourceMarker, addTargetMarker } from '../../actions/graphs'
 
 class Exemplar extends React.Component {
@@ -30,6 +31,20 @@ class Exemplar extends React.Component {
         this.setState({
             saveModify: prev
         })
+    }
+
+    computeDeformation = () => {
+        const { graphsInfo } = this.props;
+        const manualMarkers = [];
+        for (let i = 0; i < graphsInfo.sourceMarkers.length; i++) {
+            manualMarkers.push([graphsInfo.sourceMarkers[i], graphsInfo.targetMarkers[i]]);
+        }
+        this.props.dispatch(applyDeformationToSubgraph({
+            manualMarkers: manualMarkers,
+            sourceGraph: graphsInfo.source,
+            _sourceGraph: graphsInfo.sourceModified,
+            targetGraph: graphsInfo.target,
+        }))
     }
 
     onClickNode = (id) => {
@@ -71,10 +86,18 @@ class Exemplar extends React.Component {
                         }}
                         ghost
                         size="small"
-                        onClick={this.handleSaveModify}
+                        onClick={() => {
+                            if (this.props.exemplarType === 'source') {
+                                this.handleSaveModify()
+                            } else {
+                                this.computeDeformation()
+                            }
+                        }}
                     >
-                        COPY
-                        </Button>
+                        {
+                            this.props.exemplarType === 'source' ? 'COPY' : 'PASTE'
+                        }
+                    </Button>
                 </div>
                 <ControlPanel />
                 <SuggestionGallery />
@@ -90,6 +113,7 @@ function mapStateToProps(state) {
         // wholeGraphData: state.wholeGraph.graph,
         // allMarker: state.deformation.allMarker
         exemplarType: state.wholeGraph.lassoType,
+        graphsInfo: state.graphs, // NOTE: redundant, for convenience of getting markers
         graph: state.wholeGraph.lassoType === 'source' ? state.graphs.source : state.graphs.target,
         markers: state.wholeGraph.lassoType === 'source' ? state.graphs.sourceMarkers : state.graphs.targetMarkers
     }

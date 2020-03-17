@@ -374,8 +374,16 @@ class WholeGraph extends React.Component {
                 {this.props.sourceGraph && <Exemplar
                     class={'source_modified'}
                     title={'SOURCE MODIFIED'}
+                    graph={this.props.lassoType === 'source' ? this.props.source : this.props.target}
+                    markers={this.props.lassoType === 'source' ? this.props.sourceMarkers : this.props.targetMarkers}
                     onDragged={this.onDraggedSource} />}
 
+                {
+                    this.props.targetModified &&
+                    <Exemplar
+                        class={'targetGenerated'}
+                    />
+                }
             </div>
         )
     }

@@ -4,6 +4,7 @@ import { SET_DEFORMATION_GRAPH } from "../actions/deformation";
 import {
     ADD_SOURCE_MARKER,
     ADD_TARGET_MARKER,
+    SET_TARGET_GENERATED,
 } from "../actions/graphs"
 import { CLEAR_SOURCE_MARKER } from "../actions/graphs"
 import { CLEAR_TARGET_MARKER } from "../actions/graphs"
@@ -37,6 +38,10 @@ export function graphs(state = initGraphs, action) {
                 sourceModified: action.data
             })
         }
+        case SET_TARGET_GENERATED:
+            return Object.assign({}, state, {
+                targetGenerated: action.data
+            })
 
         case ADD_SOURCE_MARKER: {
             const newMarkers = state.sourceMarkers
