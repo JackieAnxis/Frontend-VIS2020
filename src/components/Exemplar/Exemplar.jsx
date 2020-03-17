@@ -8,6 +8,7 @@ import SuggestionGallery from '../SuggestionGallery/SuggestionGallery'
 import '../common.css'
 import './Exemplar.css'
 import GraphD3 from '../GraphD3'
+import { addSourceMarker, addTargetMarker } from '../../actions/graphs'
 
 class Exemplar extends React.Component {
     constructor(props) {
@@ -32,6 +33,11 @@ class Exemplar extends React.Component {
     }
 
     onClickNode = (id) => {
+        if (this.props.exemplarType === 'source') {
+            this.props.dispatch(addSourceMarker(id))
+        } else {
+            this.props.dispatch(addTargetMarker(id))
+        }
         console.log(id)
     }
 
@@ -83,6 +89,8 @@ function mapStateToProps(state) {
         // graph: state.graphs.source,
         // wholeGraphData: state.wholeGraph.graph,
         // allMarker: state.deformation.allMarker
+        exemplarType: state.wholeGraph.lassoType,
+        markers: state.wholeGraph.lassoType === 'source' ? state.graphs.sourceMarkers : state.graphs.targetMarkers
     }
 }
 
