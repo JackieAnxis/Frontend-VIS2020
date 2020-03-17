@@ -1,0 +1,64 @@
+#ControlPanelContainer {
+    /* left: 5px;
+    top: 10px; */
+    width: 300px;
+    /*1920-10-1020-10-386.67-10-10*/
+    /* height: 200px; */
+    /*1080 - 623.33 - 10 * 3*/
+    border: 1px solid #333;
+    border-radius: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 10px;
+    background: #f6f6f6;
+}
+
+#ControlPanelBody {
+    width: 100%;
+    /* height: 100%; */
+    /* 426.67 - 40*/
+}
+
+.operations-container {
+    width: 50%;
+    right: 10px;
+    height: 100%;
+    position: absolute;
+}
+
+
+.search-param-container {
+    /* width: 50%;
+    height: 100%;
+    position: absolute; */
+    /* height: 100%; */
+    flex-wrap: wrap;
+    display: flex;
+}
+
+.param-container {
+    width: 95px;
+    height: 40px;
+    /* margin-top: 10px;
+    margin-left: 10px; */
+}
+
+.last-param-input {
+  width: 80px;
+  font-size: 14px;
+}
+
+.param-label {
+    font-size: 14px;
+    width: 35px;
+    text-align: center;
+    display: inline-block;
+    background: #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.param-input {
+    width: 50px;
+    font-size: 14px;
+}

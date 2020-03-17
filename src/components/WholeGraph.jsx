@@ -6,6 +6,7 @@ import { requestWholeGraph } from '../actions/wholeGraph'
 import { generateSubgraph } from '../actions/subGraph'
 import { GraphTransformer } from '../utils/vis'
 import Header from './Header'
+import Exemplar from './Exemplar/Exemplar'
 import { Button, Switch } from 'antd'
 import './common.css'
 import './lasso.css'
@@ -55,7 +56,7 @@ class WholeGraph extends React.Component {
         // 如果已经加载了图
         if (this.state.graphName) {
             let subGraph = nextProps.subGraph;
-            if (subGraph) {
+            if (subGraph && 'nodes' in subGraph) {
                 const svg = d3.select(this.svgRef.current);
                 for (const node of subGraph.nodes) {
                     svg.select(`#node-${node.id}`).classed('selected', true)
@@ -73,7 +74,7 @@ class WholeGraph extends React.Component {
             svg.on('.zoom', null);
             svg.call(this.lasso);
         } else {
-            svg.call(this.zoom);
+            svg.call(this.zoom).on('dblclick.zoom', null);
             svg.on('.dragstart', null);
             svg.on('.drag', null);
             svg.on('.dragend', null);
@@ -192,8 +193,14 @@ class WholeGraph extends React.Component {
             this.lasso.notSelectedItems()
                 .attr("r", configs.node.r);
 
-            const items = this.lasso.selectedItems().data();
-            this.props.dispatch(setLassoResult(items, this.props.lassoType));
+            const nodes = this.lasso.selectedItems().data();
+            const links = getLinkFromNodes(nodes);
+            if (nodes.length) {
+              this.props.dispatch(setLassoResult({
+                'nodes': nodes,
+                'links': links
+              }, this.props.lassoType));
+            }
         };
 
         this.lasso = d3Lasso()
@@ -220,6 +227,36 @@ class WholeGraph extends React.Component {
             node.attr("transform", d3.event.transform);
         }
 
+        function getLinkFromNodes (nodes) {
+          const allLinks = _this.props.graph.links;
+          // bruce-force
+          const links = [];
+          const nodesId = nodes.map(d => d.id);
+          for (const link of allLinks) {
+            if (nodesId.indexOf(link.target) > -1 && nodesId.indexOf(link.source) > -1)
+              links.push({
+                source: link.source,
+                target: link.target,
+              })
+          }
+          // for (let outerIndex = 0; outerIndex < nodes.length - 1; outerIndex++) {
+          //     const outerNode = nodes[outerIndex];
+          //     for (let innerIndex = outerIndex; innerIndex < nodes.length; innerIndex++) {
+          //         const innerNode = nodes[innerIndex];
+          //         if (outerNode.id !== innerNode.id) {
+          //             const link = g.getLinkByEnd(outerNode.id, innerNode.id);
+          //             if (link) {
+          //                 links.push({
+          //                     source: link.source.id,
+          //                     target: link.target.id,
+          //                 });
+          //             }
+          //         }
+          //     }
+          // }
+          return links;
+      }
+
     }
 
     onGenerateSubgraph = () => {
@@ -228,6 +265,10 @@ class WholeGraph extends React.Component {
         }))
     }
 
+    onDraggedSource = (data) => {
+      // dispatch(setSourceModified(data))
+    }
+  
     render() {
         return (
             <div
@@ -250,7 +291,7 @@ class WholeGraph extends React.Component {
                 }}
             >
                 <Header title="NODE-LINK VIEW" />
-                <div className='container'>
+                <div className='container'> 
                     <svg ref={this.svgRef}></svg>
                     {
                         // upload&download button
@@ -259,7 +300,7 @@ class WholeGraph extends React.Component {
                             top: 20,
                             left: 20
                         }}>
-                            <Button
+                            {/* <Button
                                 shape='circle'
                                 icon='upload'
                                 size='large'
@@ -271,11 +312,11 @@ class WholeGraph extends React.Component {
                                 shape='circle'
                                 icon='download'
                                 size='large'
-                            />
+                            /> */}
                             {/* 临时的按钮 */}
-                            <Button
+                            {/* <Button
                                 onClick={this.onGenerateSubgraph}
-                            >Get Exemplar</Button>
+                            >Get Exemplar</Button> */}
                         </div>
                     }
                     {
@@ -311,6 +352,12 @@ class WholeGraph extends React.Component {
                         />
                     }
                 </div>
+                {this.props.sourceGraph && <Exemplar
+                        class={'source_modified'}
+                        title={'SOURCE MODIFIED'}
+                        graph={this.props.sourceGraph}
+                        onDragged={this.onDraggedSource}/>}
+                
             </div>
         )
     }
@@ -319,7 +366,8 @@ class WholeGraph extends React.Component {
 function mapStateToProps(state) {
     return {
         ...state.wholeGraph,
-        subGraph: state.subGraph
+        subGraph: state.subGraph,
+        sourceGraph: state.graphs.source,
     }
 }
 

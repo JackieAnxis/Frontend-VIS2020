@@ -1,4 +1,5 @@
 import { SET_LASSO_RESULT } from "../actions/wholeGraph";
+import { SET_DEFORMATION_GRAPH } from "../actions/deformation";
 
 const initGraphs = {
     source: null,
@@ -19,6 +20,11 @@ export function graphs(state = initGraphs, action) {
                     target: action.data
                 })
             }
+        }
+        case SET_DEFORMATION_GRAPH: {
+            return Object.assign({}, state, {
+              sourceModified: action.data
+          })
         }
         default:
             return state;
