@@ -7,6 +7,7 @@ import { generateSubgraph } from '../actions/subGraph'
 import { GraphTransformer } from '../utils/vis'
 import Header from './Header'
 import Exemplar from './Exemplar/Exemplar'
+import GraphD3 from './GraphD3'
 import { Button, Switch } from 'antd'
 import './common.css'
 import './lasso.css'
@@ -381,10 +382,24 @@ class WholeGraph extends React.Component {
                 {
                     // TODO: show only for debug, can safely deleted
                     this.props.graphsInfo.targetGenerated &&
-                    <Exemplar
-                        class={'target_generated'}
-                        graph={this.props.graphsInfo.targetGenerated}
-                    />
+                    this.props.graph &&
+                    <div style={{
+                        position: "absolute",
+                        right: 40,
+                        top: 200,
+                        width: 300,
+                        height: 300,
+                        border: '1px solid',
+                    }}>
+                        <GraphD3
+                            data={this.props.graphsInfo.targetGenerated}
+                            width={300}
+                            height={300}
+                            padding={20}
+                            autoLayout={false}
+                            id={'target_generated'}
+                        />
+                    </div>
                 }
             </div>
         )
