@@ -43,7 +43,8 @@ export function copyDeformationHistory(data) {
 }
 
 export function applyDeformationToSubgraph(postData) {
-  const url = `${backendAddress}/apply-deformation`
+  const url = `${backendAddress}/apply-deformation`;
+  const graphId = postData.graphId;
   return (dispatch) => {
     return fetch(url, {
       method: 'POST',
@@ -55,7 +56,7 @@ export function applyDeformationToSubgraph(postData) {
       .then((res) => res.json())
       .then((data) => {
         // dispatch(gotDeformationResult(postData.targetGraphId, data))
-        dispatch(setTargetGenerated(data))
+        dispatch(setTargetGenerated(data, graphId))
       })
   }
 }

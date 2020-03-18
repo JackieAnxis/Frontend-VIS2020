@@ -2,10 +2,7 @@ import React from 'react'
 import { Button, Input } from 'antd'
 import { connect } from 'react-redux'
 import { defaultSearchParams } from '../../configs'
-// import Header from '../containers/Header'
 import { requestSuggestions } from '../../actions/suggestions'
-// import { autoLayout } from '../actions/exemplar'
-// import { applyDeformationToWholegraph } from '../actions/deformation'
 import './ControlPanel.css'
 import '../common.css'
 
@@ -17,14 +14,14 @@ function onChangeTemplate(o, key) {
 
 class ParamInput extends React.Component {
 	render() {
-    let inputClassName = "param-input";
+    let inputClassName = "";
     if (this.props.label === 'ℇ') {
-      inputClassName +=" last-param-input"
+      inputClassName ="-last"
     }
 		return (
-			<div className="param-container">
+			<div className={`param-container${inputClassName}`}>
 				<div className="param-label">{this.props.label}</div>
-				<Input onChange={this.props.onChange} className={inputClassName} defaultValue={this.props.defaultValue} />
+				<Input onChange={this.props.onChange} className={`param-input${inputClassName}`} defaultValue={this.props.defaultValue} />
 			</div>
 		)
 	}
@@ -133,7 +130,7 @@ function mapStateToProps(state) {
 		dataset: state.wholeGraph.name,
     // exemplar: state.exemplar,
     wholeGraphData: state.wholeGraph.graph,
-    sourceGraph: state.graphs.source
+    sourceGraph: state.graphs.source.sourceOrigin
     // deformedTargetGraph: state.deformation.deformedTargetGraph
 	}
 }

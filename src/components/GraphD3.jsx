@@ -99,7 +99,7 @@ function GraphD3(props) {
       .on('click', function (d) {
         if (d3.event.defaultPrevented) return; // dragged
         if (onClickNode) {
-          onClickNode(parseInt(d.id))
+          onClickNode(parseInt(d.id), id)
           /*
           d3.select(this.parentNode)
             .append('text')
@@ -139,6 +139,20 @@ function GraphD3(props) {
     const node = nodeGroup.selectAll('circle');
     const label = nodeGroup.selectAll('text');
 
+    if (markers.length) {
+      let markerNodes = node.filter(d=> {
+        return markers.indexOf(parseInt(d.id)) > -1
+      });
+      markerNodes.attr('fill', '#E65C49')
+          .attr('r', 15);
+      let markerIndex = 1;
+      markerNodes.each(function(d, index) { // 为什么index全是0啊
+          d3.select(this.parentNode)
+          .select('text')
+          .text('' + (markerIndex++))
+      })
+    }
+    
     /*
     const node = svg.append("g")
       .attr('id', 'nodes')

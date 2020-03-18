@@ -16,7 +16,12 @@ export function suggestions(state = initSuggestions, action) {
                 subgraphs: action.data
             })
         case SET_LASSO_RESULT:
-          return Object.assign({}, state, initSuggestions)
+          if (action.lassoType === 'source') {
+            return Object.assign({}, state, initSuggestions);
+          } else {
+            return state;
+          }
+          
     }
     return state;
 }

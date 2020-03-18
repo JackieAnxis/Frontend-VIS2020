@@ -8,8 +8,8 @@ import SuggestionGallery from '../SuggestionGallery/SuggestionGallery'
 import '../common.css'
 import './Exemplar.css'
 import GraphD3 from '../GraphD3'
-import { applyDeformationToSubgraph } from '../../actions/deformation'
-import { addSourceMarker, addTargetMarker } from '../../actions/graphs'
+import { setViewCenter } from '../../actions/wholeGraph'
+import { addSourceMarker } from '../../actions/graphs'
 
 class Exemplar extends React.Component {
     constructor(props) {
@@ -27,40 +27,32 @@ class Exemplar extends React.Component {
     }
 
     handleSaveModify = () => {
-        let prev = this.state.saveModify + 1;
-        this.setState({
-            saveModify: prev
-        })
-    }
-
-    computeDeformation = () => {
-        const { graphsInfo } = this.props;
-        const manualMarkers = [];
-        for (let i = 0; i < graphsInfo.sourceMarkers.length; i++) {
-            manualMarkers.push([graphsInfo.sourceMarkers[i], graphsInfo.targetMarkers[i]]);
-        }
-        this.props.dispatch(applyDeformationToSubgraph({
-            manualMarkers: manualMarkers,
-            sourceGraph: graphsInfo.source,
-            _sourceGraph: graphsInfo.sourceModified,
-            targetGraph: graphsInfo.target,
-        }))
-    }
-
-    onClickNode = (id) => {
-        if (this.props.exemplarType === 'source') {
-            this.props.dispatch(addSourceMarker(id))
+        const {sourceMarkers} = this.props.graphsInfo.source;
+        if (!sourceMarkers.length) {
+            alert("Please set markers before copying!")
         } else {
-            this.props.dispatch(addTargetMarker(id))
-        }
-        console.log(id)
+            let prev = this.state.saveModify + 1;
+            this.setState({
+                saveModify: prev
+            })
+          }
+    }
+
+    onClickNode = (nodeId, graphId) => {
+        this.props.dispatch(addSourceMarker(nodeId))
+    }
+
+    onSetViewCenter = () => {
+      if (!this.props.viewCenter || JSON.stringify(this.props.viewCenter.nodes) !== JSON.stringify(this.props.graph.nodes)) {
+        this.props.dispatch(setViewCenter(this.props.graph))
+      }
     }
 
     render() {
         return (
             <div className={this.props.class}>
                 {/* <Header title={this.props.title} /> */}
-                <div ref={this.ref}>
+                <div ref={this.ref} style={{height: 300}} onClick={this.onSetViewCenter}>
                     {
                         this.props.graph && <GraphD3
                             dispatch={this.props.dispatch}
@@ -86,17 +78,9 @@ class Exemplar extends React.Component {
                         }}
                         ghost
                         size="small"
-                        onClick={() => {
-                            if (this.props.exemplarType === 'source') {
-                                this.handleSaveModify()
-                            } else {
-                                this.computeDeformation()
-                            }
-                        }}
+                        onClick={() => this.handleSaveModify()}
                     >
-                        {
-                            this.props.exemplarType === 'source' ? 'COPY' : 'PASTE'
-                        }
+                        COPY
                     </Button>
                 </div>
                 <ControlPanel />
@@ -114,6 +98,7 @@ function mapStateToProps(state) {
         // allMarker: state.deformation.allMarker
         exemplarType: state.wholeGraph.lassoType,
         graphsInfo: state.graphs, // NOTE: redundant, for convenience of getting markers
+        viewCenter: state.wholeGraph.viewCenter,
     }
 }
 

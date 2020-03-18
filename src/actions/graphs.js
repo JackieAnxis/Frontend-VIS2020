@@ -14,16 +14,18 @@ export function addSourceMarker(id) {
     }
 }
 
-export function addTargetMarker(id) {
+export function addTargetMarker(nodeId, graphId) {
     return {
         type: ADD_TARGET_MARKER,
-        id,
+        nodeId,
+        graphId
     }
 }
 
-export function setTargetGenerated(data) {
+export function setTargetGenerated(data, graphId) {
     return {
         type: SET_TARGET_GENERATED,
-        data
+        data,
+        graphId
     }
 }

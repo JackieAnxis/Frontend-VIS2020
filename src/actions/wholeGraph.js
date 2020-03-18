@@ -3,6 +3,7 @@ export const REQUEST_WHOLE_GRAPH = 'REQUEST_WHOLE_GRAPH';
 export const GOT_WHOLE_GRAPH = 'GOT_WHOLE_GRAPH';
 export const SET_LASSO_RESULT = 'SET_LASSO_RESULT';
 export const SWITCH_LASSO_TYPE = 'SWITCH_LASSO_TYPE';
+export const SET_VIEW_CENTER = 'SET_VIEW_CENTER';
 
 export function switchLassoType(isSource) {
     return {
@@ -36,4 +37,11 @@ function gotWholeGraph(data) {
         type: GOT_WHOLE_GRAPH,
         data
     }
+}
+
+export function setViewCenter(data) {
+  return {
+    type: SET_VIEW_CENTER,
+    data
+  }
 }

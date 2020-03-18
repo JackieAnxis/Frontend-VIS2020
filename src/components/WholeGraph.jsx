@@ -7,10 +7,10 @@ import { generateSubgraph } from '../actions/subGraph'
 import { GraphTransformer } from '../utils/vis'
 import Header from './Header'
 import Exemplar from './Exemplar/Exemplar'
-import GraphD3 from './GraphD3'
 import { Button, Switch } from 'antd'
 import './common.css'
 import './lasso.css'
+import { applyDeformationToWholegraph } from '../actions/deformation'
 import { setLassoResult, switchLassoType } from '../actions/wholeGraph'
 
 window.d3 = d3 // NOTE: d3-lasso need global d3, f**k
@@ -56,15 +56,27 @@ class WholeGraph extends React.Component {
     componentWillReceiveProps(nextProps) {
         // 如果已经加载了图
         if (this.state.graphName) {
-            let subGraph = nextProps.subGraph;
-            if (subGraph && 'nodes' in subGraph) {
-                const svg = d3.select(this.svgRef.current);
-                for (const node of subGraph.nodes) {
-                    svg.select(`#node-${node.id}`).classed('selected', true)
-                }
-                for (const link of subGraph.links) {
-                    svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
-                }
+            // let subGraph = nextProps.subGraph;
+            const svg = d3.select(this.svgRef.current);
+            // if (subGraph && 'nodes' in subGraph) {
+            //     for (const node of subGraph.nodes) {
+            //         svg.select(`#node-${node.id}`).classed('selected', true)
+            //     }
+            //     for (const link of subGraph.links) {
+            //         svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
+            //     }
+            // }
+            if (nextProps.viewCenter && nextProps.viewCenter !== this.props.viewCenter) {
+              // to modify
+              // this.zoom.translateTo(svg,10, 0);
+              svg.select('#nodes').selectAll('circle.selected').classed('selected', false).attr('r', 5);
+              svg.select('#links').selectAll('line.selected').classed('selected', false);
+              for (const node of nextProps.viewCenter.nodes) {
+                svg.select(`#node-${node.id}`).classed('selected', true)
+              }
+              for (const link of nextProps.viewCenter.links) {
+                  svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
+              }
             }
         }
     }
@@ -106,6 +118,7 @@ class WholeGraph extends React.Component {
 
         const link = svg.append("g")
             .attr("stroke", configs.link.color)
+            .attr('id', 'links')
             .attr("stroke-opacity", 0.6)
             .selectAll("line")
             .data(links)
@@ -289,7 +302,28 @@ class WholeGraph extends React.Component {
         // dispatch(setSourceModified(data))
     }
 
+    // 应用到大图上
+    onApplyDeformation = () => {
+      const {target} = this.props.graphsInfo;
+      // const keys = Object.keys(target);
+      let deformedTargetGraph = [];
+      for (let key in target) {
+        if (target[key].targetGenerated) {
+          deformedTargetGraph.push(target[key].targetGenerated)
+        }
+      }
+      if (!deformedTargetGraph.length) {
+        alert("No deformed subgraphs yet!")
+      } else {
+        this.props.dispatch(applyDeformationToWholegraph({
+          wholeGraphData: this.props.graph,
+          deformedTargetGraph: deformedTargetGraph
+        }))
+      }
+    }
+
     render() {
+        const {source, target} = this.props.graphsInfo;
         return (
             <div
                 tabIndex={'0'}
@@ -355,8 +389,7 @@ class WholeGraph extends React.Component {
                             <span>#link: {this.props.graph.links.length}</span>
                         </div>
                     }
-                    {
-                        // Lasso switcher
+                    
                         <Switch
                             style={{
                                 position: 'absolute',
@@ -370,16 +403,30 @@ class WholeGraph extends React.Component {
                                 this.props.dispatch(switchLassoType(checked))
                             }}
                         />
-                    }
+                        <Button
+                          style={{
+                            position: 'absolute',
+                              top: 50,
+                              right: 20,
+                              width: 75,
+                              height: 25
+                          }}
+                          type="primary"
+                          onClick={this.onApplyDeformation}>
+                          FUSE
+                        </Button>
+                    
                 </div>
-                {this.props.sourceGraph && <Exemplar
+                {source.sourceOrigin && <Exemplar
                     class={'source_modified'}
                     title={'SOURCE MODIFIED'}
-                    graph={this.props.lassoType === 'source' ? this.props.graphsInfo.source : this.props.graphsInfo.target}
-                    markers={this.props.lassoType === 'source' ? this.props.graphsInfo.sourceMarkers : this.props.graphsInfo.targetMarkers}
+                    graph={source.sourceOrigin}
+                    markers={source.sourceMarkers}
+                    // graph={this.props.lassoType === 'source' ? this.props.graphsInfo.source : this.props.graphsInfo.target}
+                    // markers={this.props.lassoType === 'source' ? this.props.graphsInfo.sourceMarkers : this.props.graphsInfo.targetMarkers}
                     onDragged={this.onDraggedSource} />}
 
-                {
+                {/* {
                     // TODO: show only for debug, can safely deleted
                     this.props.graphsInfo.targetGenerated &&
                     this.props.graph &&
@@ -400,7 +447,7 @@ class WholeGraph extends React.Component {
                             id={'target_generated'}
                         />
                     </div>
-                }
+                } */}
             </div>
         )
     }
@@ -411,7 +458,6 @@ function mapStateToProps(state) {
         ...state.wholeGraph,
         subGraph: state.subGraph,
         graphsInfo: state.graphs, // NOTE: redundant, for convenience of draw differenct graph
-        sourceGraph: state.graphs.source,
     }
 }
 
