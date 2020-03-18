@@ -79,13 +79,75 @@ function GraphD3(props) {
 
     const colors = ["#A52A2A", "#FF8C00", "#FFD700"];
     let labels; // TODO: delare labels
+    const nodeGroup = svg.append("g")
+      .attr('id', 'nodes')
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 1.5)
+      .selectAll("circle")
+      .data(nodes)
+      .enter()
+      .append('g');
+
+
+    nodeGroup.append("circle")
+      // .attr("r", (d, i) => (i < 3) ? 8:5)
+      .attr("r", 5)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      // .attr("fill", (d, i) => (i < 3) ? colors[i]:'#aaa')
+      .attr("fill", '#aaa')
+      .on('click', function (d) {
+        if (d3.event.defaultPrevented) return; // dragged
+        if (onClickNode) {
+          onClickNode(parseInt(d.id))
+          /*
+          d3.select(this.parentNode)
+            .append('text')
+            .attr('text-anchor', 'middle')
+            // .attr('fill', '#E65C49')
+            .attr('fill', '#ffffff')
+            .style('font-size', 20)
+            .attr('transform', `translate(${d3.select(this).attr('cx')}, ${7 + Number(d3.select(this).attr('cy'))})`)
+            .text('' + (markers.length))
+            */
+          d3.select(this)
+            .attr('fill', '#E65C49')
+            .attr('r', 15)
+          d3.select(this.parentNode)
+            .select('text')
+            .text('' + (markers.length))
+            .each(function () {
+              this.parentNode.append(this)
+            })
+
+          // d3.select(this.nextSibling)
+          // .text('' + (markers.length))
+        }
+      })
+
+    nodeGroup.append('text')
+      .attr('text-anchor', 'middle')
+      // .attr('fill', '#E65C49')
+      .attr('fill', '#ffffff')
+      .attr('x', d => d.x)
+      .attr('y', d => d.y + 8)
+      .style('font-size', 20)
+      // .text('aaaaa');
+    // .attr('transform', `translate(${d3.select(this).attr('cx')}, ${7 + Number(d3.select(this).attr('cy'))})`)
+    // .text('' + (markers.length))
+
+    const node = nodeGroup.selectAll('circle');
+    const label = nodeGroup.selectAll('text');
+
+    /*
     const node = svg.append("g")
       .attr('id', 'nodes')
       .attr("stroke", "#fff")
       .attr("stroke-width", 1.5)
       .selectAll("circle")
       .data(nodes)
-      .join("circle")
+      .enter()
+      .append("circle")
       // .attr("r", (d, i) => (i < 3) ? 8:5)
       .attr("r", 5)
       .attr('cx', d => d.x)
@@ -109,6 +171,7 @@ function GraphD3(props) {
             .attr('r', 15)
         }
       })
+      */
 
     labels = svg.append('g').attr('id', 'labels'); // draw labels above nodes
     // suggestion和history默认不能drag和zoom
@@ -130,17 +193,19 @@ function GraphD3(props) {
     function zoomed() {
       transform = d3.event.transform;
       node.attr("transform", d3.event.transform);
+      label.attr("transform", d3.event.transform);
       link.attr("transform", d3.event.transform);
     }
 
     function dragStart() {
-      d3.select(this).raise();
+      // d3.select(this).raise();
     }
 
     function dragged(d) {
       d.x = d3.event.x;
       d.y = d3.event.y;
       d3.select(this).attr("cx", d.x).attr("cy", d.y);
+      d3.select(this.parentNode).select('text').attr('x', d.x).attr('y', d.y + 8);
       link.filter(function (l) { return l.source === d.id; }).attr("x1", d.x).attr("y1", d.y);
       link.filter(function (l) { return l.target === d.id; }).attr("x2", d.x).attr("y2", d.y);
     }
@@ -156,7 +221,7 @@ function GraphD3(props) {
 
     // const exemplarMarker = [parseInt(nodes[0].id), parseInt(nodes[1].id), parseInt(nodes[2].id)];
     // 应用deform之后不用再重新算对应的点
-    if (!deformFlag && (id == "source" || id == "target")){
+    if (!deformFlag && (id == "source" || id == "target")) {
       let marker = {};
       marker[id] = [parseInt(nodes[0].id), parseInt(nodes[1].id), parseInt(nodes[2].id)]
       dispatch(setDeformationMarker(marker));
@@ -210,7 +275,7 @@ function GraphD3(props) {
       .selectAll("circle")
       .data(nodes)
       .join("circle")
-      .attr("r", 5)
+      .attr("r", 10)
       .attr("id", d => d.id)
       // .attr('cx', d => d.x)
       // .attr('cy', d => d.y)
