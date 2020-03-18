@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 import { lasso as d3Lasso } from 'd3-lasso'
 import { requestWholeGraph } from '../actions/wholeGraph'
 import { generateSubgraph } from '../actions/subGraph'
-import { GraphTransformer } from '../utils/vis'
+import { GraphTransformer, getGraphCenter } from '../utils/vis'
 import Header from './Header'
 import Exemplar from './Exemplar/Exemplar'
 import { Button, Switch } from 'antd'
@@ -35,6 +35,7 @@ class WholeGraph extends React.Component {
         this.svgRef = React.createRef();
         this.lasso = null;
         this.zoom = null;
+        this.transformer = null;
         this.state = {
             markers: [],
             graphName: ''
@@ -68,7 +69,9 @@ class WholeGraph extends React.Component {
             // }
             if (nextProps.viewCenter && nextProps.viewCenter !== this.props.viewCenter) {
               // to modify
-              // this.zoom.translateTo(svg,10, 0);
+              const center = this.transformer.transformPos(getGraphCenter(nextProps.viewCenter));
+              this.zoom.duration(750).translateTo(svg.transition().duration(500), center.x, center.y);
+
               svg.select('#nodes').selectAll('circle.selected').classed('selected', false).attr('r', 5);
               svg.select('#links').selectAll('line.selected').classed('selected', false);
               for (const node of nextProps.viewCenter.nodes) {
@@ -99,8 +102,8 @@ class WholeGraph extends React.Component {
         if (!this.props.graph || !this.props.graph.nodes) {
             return;
         }
-        const transformer = GraphTransformer(this.props.graph, configs.width, configs.height, configs.padding);
-        const visData = transformer.transform();
+        this.transformer = GraphTransformer(this.props.graph, configs.width, configs.height, configs.padding);
+        const visData = this.transformer.transform();
         const nodes = visData.nodes;
         const links = visData.links;
         const nodeMap = {};
