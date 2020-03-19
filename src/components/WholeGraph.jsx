@@ -44,8 +44,9 @@ class WholeGraph extends React.Component {
     componentDidMount() {
         this.props.dispatch(requestWholeGraph())
     }
-    componentDidUpdate() {
-        if (this.props.name !== this.state.graphName) {
+    componentDidUpdate(prevProps) {
+        if (this.props.name !== this.state.graphName || this.props.graphState !== prevProps.graphState) {
+        // if (this.props.name !== this.state.graphName) {
             this.draw();
             console.log("update")
             this.setState({
