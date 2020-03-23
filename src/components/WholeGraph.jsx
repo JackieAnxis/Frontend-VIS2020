@@ -22,9 +22,11 @@ const configs = {
     node: {
         color: 'rgba(36, 144, 200, 0.5)',
         r: 5,
+        border: 1.5,
     },
     link: {
-        color: 'rgba(153, 153, 153, 0.1)'
+        color: 'rgba(153, 153, 153, 0.1)',
+        width: 3,
     },
     padding: 20,
 }
@@ -36,6 +38,7 @@ class WholeGraph extends React.Component {
         this.lasso = null;
         this.zoom = null;
         this.transformer = null;
+        this.zoomTransform = { k: 1, x: 0, y: 0 };
         this.state = {
             markers: [],
             graphName: ''
@@ -46,7 +49,7 @@ class WholeGraph extends React.Component {
     }
     componentDidUpdate(prevProps) {
         if (this.props.name !== this.state.graphName || this.props.graphState !== prevProps.graphState) {
-        // if (this.props.name !== this.state.graphName) {
+            // if (this.props.name !== this.state.graphName) {
             this.draw();
             console.log("update")
             this.setState({
@@ -69,18 +72,18 @@ class WholeGraph extends React.Component {
             //     }
             // }
             if (nextProps.viewCenter && nextProps.viewCenter !== this.props.viewCenter) {
-              // to modify
-              const center = this.transformer.transformPos(getGraphCenter(nextProps.viewCenter));
-              this.zoom.duration(750).translateTo(svg.transition().duration(500), center.x, center.y);
+                // to modify
+                const center = this.transformer.transformPos(getGraphCenter(nextProps.viewCenter));
+                this.zoom.duration(750).translateTo(svg.transition().duration(500), center.x, center.y);
 
-              svg.select('#nodes').selectAll('circle.selected').classed('selected', false).attr('r', 5);
-              svg.select('#links').selectAll('line.selected').classed('selected', false);
-              for (const node of nextProps.viewCenter.nodes) {
-                svg.select(`#node-${node.id}`).classed('selected', true)
-              }
-              for (const link of nextProps.viewCenter.links) {
-                  svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
-              }
+                svg.select('#nodes').selectAll('circle.selected').classed('selected', false).attr('r', 5);
+                svg.select('#links').selectAll('line.selected').classed('selected', false);
+                for (const node of nextProps.viewCenter.nodes) {
+                    svg.select(`#node-${node.id}`).classed('selected', true)
+                }
+                for (const link of nextProps.viewCenter.links) {
+                    svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
+                }
             }
         }
     }
@@ -127,7 +130,7 @@ class WholeGraph extends React.Component {
             .selectAll("line")
             .data(links)
             .join("line")
-            .attr("stroke-width", 3)
+            .attr("stroke-width", configs.link.width)
             .attr("x1", d => nodeMap[d.source].x)
             .attr("y1", d => nodeMap[d.source].y)
             .attr("x2", d => nodeMap[d.target].x)
@@ -137,7 +140,7 @@ class WholeGraph extends React.Component {
         const node = svg.append("g")
             .attr('id', 'nodes')
             .attr("stroke", "#fff")
-            .attr("stroke-width", 1.5)
+            .attr("stroke-width", configs.node.border)
             .selectAll("circle")
             .data(nodes)
             .join("circle")
@@ -209,7 +212,7 @@ class WholeGraph extends React.Component {
                 .classed("selected", true)
                 .attr("r", 7);
             this.lasso.notSelectedItems()
-                .attr("r", configs.node.r);
+                .attr("r", configs.node.r / this.zoomTransform.k);
 
             const nodes = this.lasso.selectedItems().data();
             const selectedGraph = getGraphFromNodes(nodes);
@@ -233,13 +236,17 @@ class WholeGraph extends React.Component {
         this.zoom = d3.zoom()
             .extent([[0, 0], [configs.width, configs.height]])
             .scaleExtent([1, 8])
-            .on("zoom", zoomed);
+            .on("zoom", zoomed.bind(this));
 
         svg.call(this.zoom).on('dblclick.zoom', null);
         // zoom
         function zoomed() {
-            link.attr("transform", d3.event.transform);
-            node.attr("transform", d3.event.transform);
+            this.zoomTransform = d3.event.transform;
+            link.attr("transform", this.zoomTransform);
+            node.attr("transform", this.zoomTransform);
+            node.attr('r', configs.node.r / this.zoomTransform.k);
+            node.attr('stroke-width', configs.node.border / this.zoomTransform.k);
+            link.attr('stroke-width', configs.link.width / this.zoomTransform.k);
         }
 
         function getGraphFromNodes(nodes) {
@@ -308,26 +315,26 @@ class WholeGraph extends React.Component {
 
     // 应用到大图上
     onApplyDeformation = () => {
-      const {target} = this.props.graphsInfo;
-      // const keys = Object.keys(target);
-      let deformedTargetGraph = [];
-      for (let key in target) {
-        if (target[key].targetGenerated) {
-          deformedTargetGraph.push(target[key].targetGenerated)
+        const { target } = this.props.graphsInfo;
+        // const keys = Object.keys(target);
+        let deformedTargetGraph = [];
+        for (let key in target) {
+            if (target[key].targetGenerated) {
+                deformedTargetGraph.push(target[key].targetGenerated)
+            }
         }
-      }
-      if (!deformedTargetGraph.length) {
-        alert("No deformed subgraphs yet!")
-      } else {
-        this.props.dispatch(applyDeformationToWholegraph({
-          wholeGraphData: this.props.graph,
-          deformedTargetGraph: deformedTargetGraph
-        }))
-      }
+        if (!deformedTargetGraph.length) {
+            alert("No deformed subgraphs yet!")
+        } else {
+            this.props.dispatch(applyDeformationToWholegraph({
+                wholeGraphData: this.props.graph,
+                deformedTargetGraph: deformedTargetGraph
+            }))
+        }
     }
 
     render() {
-        const {source, target} = this.props.graphsInfo;
+        const { source, target } = this.props.graphsInfo;
         return (
             <div
                 tabIndex={'0'}
@@ -393,33 +400,33 @@ class WholeGraph extends React.Component {
                             <span>#link: {this.props.graph.links.length}</span>
                         </div>
                     }
-                    
-                        <Switch
-                            style={{
-                                position: 'absolute',
-                                top: 20,
-                                right: 20,
-                            }}
-                            checkedChildren="source"
-                            unCheckedChildren="target"
-                            checked={this.props.lassoType === 'source'}
-                            onChange={(checked) => {
-                                this.props.dispatch(switchLassoType(checked))
-                            }}
-                        />
-                        <Button
-                          style={{
+
+                    <Switch
+                        style={{
                             position: 'absolute',
-                              top: 50,
-                              right: 20,
-                              width: 75,
-                              height: 25
-                          }}
-                          type="primary"
-                          onClick={this.onApplyDeformation}>
-                          FUSE
+                            top: 20,
+                            right: 20,
+                        }}
+                        checkedChildren="source"
+                        unCheckedChildren="target"
+                        checked={this.props.lassoType === 'source'}
+                        onChange={(checked) => {
+                            this.props.dispatch(switchLassoType(checked))
+                        }}
+                    />
+                    <Button
+                        style={{
+                            position: 'absolute',
+                            top: 50,
+                            right: 20,
+                            width: 75,
+                            height: 25
+                        }}
+                        type="primary"
+                        onClick={this.onApplyDeformation}>
+                        FUSE
                         </Button>
-                    
+
                 </div>
                 {source.sourceOrigin && <Exemplar
                     class={'source_modified'}
