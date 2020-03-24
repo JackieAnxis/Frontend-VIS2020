@@ -7,13 +7,14 @@ import { setViewCenter } from '../../actions/wholeGraph'
 // import { copyDeformationHistory } from '../../actions/deformation'
 import './SuggestionGallery.css'
 import GraphD3 from '../GraphD3'
+import Header from '../Header'
 
 class SuggestionUnit extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       width: 190,
-		  height: 190,
+      height: 190,
       padding: 15,
       deformFlag: false
     }
@@ -38,14 +39,14 @@ class SuggestionUnit extends React.PureComponent {
     } else {
       const manualMarkers = [];
       for (let i = 0; i < sourceMarkers.length; i++) {
-          manualMarkers.push([sourceMarkers[i], targetMarkers[i]]);
+        manualMarkers.push([sourceMarkers[i], targetMarkers[i]]);
       }
       this.props.dispatch(applyDeformationToSubgraph({
-          manualMarkers: manualMarkers,
-          sourceGraph: sourceOrigin,
-          _sourceGraph: sourceModified,
-          targetGraph: targetOrigin,
-          graphId: graphId
+        manualMarkers: manualMarkers,
+        sourceGraph: sourceOrigin,
+        _sourceGraph: sourceModified,
+        targetGraph: targetOrigin,
+        graphId: graphId
       }))
     }
   }
@@ -55,30 +56,30 @@ class SuggestionUnit extends React.PureComponent {
       this.props.dispatch(setViewCenter(this.props.data))
   }
 
-  render () {
+  render() {
     return (
       <div className="SuggestionLine" id={this.props.id} onClick={this.onSetViewCenter}>
-          <GraphD3
-            data={this.props.data}
-            width={this.state.width}
-            height={this.state.height}
-            padding={this.state.padding}
-            id={this.props.id}
-            onClickNode={this.onClickNode}
-            markers={this.props.markers}
-          />
-          <Button
-              style={{
-                  position: 'absolute',
-                  bottom: 4,
-                  right: 4,
-                  color: '#aaa',
-                  border: '1px solid'
-              }}
-              ghost
-              size="small"
-              onClick={this.computeDeformation}
-          >PASTE
+        <GraphD3
+          data={this.props.data}
+          width={this.state.width}
+          height={this.state.height}
+          padding={this.state.padding}
+          id={this.props.id}
+          onClickNode={this.onClickNode}
+          markers={this.props.markers}
+        />
+        <Button
+          style={{
+            position: 'absolute',
+            bottom: 4,
+            right: 4,
+            color: '#aaa',
+            border: '1px solid'
+          }}
+          ghost
+          size="small"
+          onClick={this.computeDeformation}
+        >PASTE
           </Button>
         {/* <Button onClick={this.handleCopy}>COPY</Button> */}
       </div>
@@ -91,16 +92,16 @@ class SuggestionGallery extends React.Component {
     super(props);
   }
 
-  render () {
+  render() {
     const allNodes = this.props.wholeGraphData.nodes;
-    const {source, target} = this.props.graphsInfo;
+    const { source, target } = this.props.graphsInfo;
     this.props.subgraphs.forEach(({ graph }) => {
-			graph.nodes.forEach((node) => {
+      graph.nodes.forEach((node) => {
         // !!!wholeGraph里的node是按id排序的
         const n = allNodes[node.id];
-				node.x = n.x;
-				node.y = n.y;
-			})
+        node.x = n.x;
+        node.y = n.y;
+      })
     })
     const displayedSubgraph = target//this.props.subgraphs.map(d=>d.graph);
     const ids = Object.keys(displayedSubgraph);
@@ -108,17 +109,20 @@ class SuggestionGallery extends React.Component {
     return (
       <div id="SuggestionGalleryContainer">
         {ids.length > 0 &&
-          <div id="SuggestionGalleryContent" className="scroll-box">{ids.map((id) => 
-            <SuggestionUnit
-              dispatch={this.props.dispatch}
-              key={id}
-              markers={displayedSubgraph[id].targetMarkers}
-              data={displayedSubgraph[id].targetGenerated?displayedSubgraph[id].targetGenerated:displayedSubgraph[id].targetOrigin}
-              source={source}
-              id={id}
-              viewCenter={this.props.viewCenter}
-            />
-          )}
+          <div>
+            <Header title='SUGGESTIONS' />
+            <div id="SuggestionGalleryContent" className="scroll-box">{ids.map((id) =>
+              <SuggestionUnit
+                dispatch={this.props.dispatch}
+                key={id}
+                markers={displayedSubgraph[id].targetMarkers}
+                data={displayedSubgraph[id].targetGenerated ? displayedSubgraph[id].targetGenerated : displayedSubgraph[id].targetOrigin}
+                source={source}
+                id={id}
+                viewCenter={this.props.viewCenter}
+              />
+            )}
+            </div>
           </div>}
       </div>
     );
@@ -126,12 +130,12 @@ class SuggestionGallery extends React.Component {
 }
 
 function mapStateToProps(state) {
-	return {
+  return {
     subgraphs: state.suggestions.subgraphs,
     wholeGraphData: state.wholeGraph.graph,
     viewCenter: state.wholeGraph.viewCenter,
     graphsInfo: state.graphs
-	}
+  }
 }
 
 export default connect(mapStateToProps)(SuggestionGallery)

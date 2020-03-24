@@ -1,19 +1,17 @@
 #ControlPanelContainer {
-    /* left: 5px;
-    top: 10px; */
+    position: absolute;
+    top: 368px;
+    left: 5px;
     width: 300px;
     /*1920-10-1020-10-386.67-10-10*/
     /* height: 200px; */
     /*1080 - 623.33 - 10 * 3*/
-    border: 1px solid #333;
-    border-radius: 5px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 10px;
+    border: 2px solid #fff;
     background: #f6f6f6;
 }
 
 #ControlPanelBody {
+    padding: 5px;
     width: 100%;
     /* height: 100%; */
     /* 426.67 - 40*/

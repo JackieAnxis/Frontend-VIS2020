@@ -1,20 +1,26 @@
 #SuggestionGalleryContainer {
-  position: relative;
-  top: 2px;
+  position: absolute;
+  top: 490px;
+  left: 5px;
+  width: 300px;
 }
 
 #SuggestionGalleryContent {
   position: relative;
   /* width: 525px; */
   z-index: 0;
-  /* top: -40px; */
-  border: 1px solid #333;
-  border-radius: 5px;
-  max-height: 592px;
+  top: 40px;
+  border: 2px solid #fff;
+  /* border-radius: 5px; */
+  max-height: 526px;
   /* overflow: auto; */
   background: #f6f6f6;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+#SuggestionGalleryContent::-webkit-scrollbar {
+  display: none;
 }
 
 .SuggestionLine {
