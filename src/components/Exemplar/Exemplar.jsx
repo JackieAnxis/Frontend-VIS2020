@@ -54,7 +54,7 @@ class Exemplar extends React.Component {
                 <div className={this.props.class}>
                     <Header title={this.props.title} />
                     <div ref={this.ref} style={{
-                        height: 300,
+                        height: 280,
                         position: 'absolute',
                         top: 40,
                     }} onClick={this.onSetViewCenter}>

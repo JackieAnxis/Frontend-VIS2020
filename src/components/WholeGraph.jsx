@@ -7,6 +7,7 @@ import { generateSubgraph } from '../actions/subGraph'
 import { GraphTransformer, getGraphCenter } from '../utils/vis'
 import Header from './Header'
 import Exemplar from './Exemplar/Exemplar'
+import HistoryPanel from './HistoryPanel/HistoryPanel'
 import { Button, Switch } from 'antd'
 import './common.css'
 import './lasso.css'
@@ -356,6 +357,7 @@ class WholeGraph extends React.Component {
                 }}
             >
                 <Header title="NODE-LINK VIEW" />
+                <HistoryPanel />
                 <div className='container'>
                     <svg ref={this.svgRef}></svg>
                     {
