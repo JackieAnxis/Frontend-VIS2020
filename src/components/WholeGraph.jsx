@@ -211,7 +211,7 @@ class WholeGraph extends React.Component {
                 .classed("possible", false);
             this.lasso.selectedItems()
                 .classed("selected", true)
-                .attr("r", 7);
+                .attr("r", 7 / this.zoomTransform.k);
             this.lasso.notSelectedItems()
                 .attr("r", configs.node.r / this.zoomTransform.k);
 
