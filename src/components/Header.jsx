@@ -3,7 +3,7 @@ import './Header.css'
 
 class Header extends React.Component {
 	render() {
-		return <div className="header-container">
+		return <div style={this.props.style} className="header-container">
 			<span>{this.props.title}</span>
 			<span
 			style={{

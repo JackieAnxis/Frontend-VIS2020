@@ -336,6 +336,7 @@ class WholeGraph extends React.Component {
 
     render() {
         const { source, target } = this.props.graphsInfo;
+        const showExemplar = !!this.props.graphsInfo.source.sourceOrigin;
         return (
             <div
                 tabIndex={'0'}
@@ -356,7 +357,14 @@ class WholeGraph extends React.Component {
                     width: 1900, // 1920 - 20
                 }}
             >
-                <Header title="NODE-LINK VIEW" />
+                <Header
+                    style={{
+                        width: showExemplar ? 1800 : 1900,
+                        left: showExemplar ? 100 : 0,
+                        transition: 'left 0.8s, width 0.8s'
+                    }}
+                    title="NODE-LINK VIEW"
+                />
                 <HistoryPanel />
                 <div className='container'>
                     <svg ref={this.svgRef}></svg>
