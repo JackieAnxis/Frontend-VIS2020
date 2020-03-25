@@ -1,12 +1,12 @@
 #ControlPanelContainer {
     position: absolute;
-    top: 368px;
-    left: 5px;
+    top: 328px;
+    /* left: 5px; */
     width: 300px;
     /*1920-10-1020-10-386.67-10-10*/
     /* height: 200px; */
     /*1080 - 623.33 - 10 * 3*/
-    border: 2px solid #fff;
+    /* border: 2px solid #fff; */
     background: #f6f6f6;
 }
 

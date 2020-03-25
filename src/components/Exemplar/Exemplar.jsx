@@ -49,51 +49,61 @@ class Exemplar extends React.Component {
     }
 
     render() {
-        if (!this.props.graphsInfo.source.sourceOrigin) {
-            return null;
-        }
+        const show = !!this.props.graphsInfo.source.sourceOrigin;
         return (
-            <div>
-                <div className={this.props.class}>
-                    <Header title={this.props.title} />
-                    <div ref={this.ref} style={{
-                        height: 280,
-                        position: 'absolute',
-                        top: 40,
-                    }} onClick={this.onSetViewCenter}>
-                        {
-                            this.props.graphsInfo.source.sourceOrigin && <GraphD3
-                                dispatch={this.props.dispatch}
-                                data={this.props.graphsInfo.source.sourceOrigin}
-                                markers={this.props.graphsInfo.source.sourceMarkers} // not general usage, only to get total number of markers
-                                width={300}
-                                height={280}
-                                padding={20}
-                                autoLayout={false}
-                                onDragged={this.props.onDragged}
-                                onClickNode={this.onClickNode}
-                                saveModify={this.state.saveModify}
-                                id={this.props.class}
-                            />
-                        }
-                        <Button
-                            style={{
-                                position: 'absolute',
-                                bottom: 4,
-                                right: 4,
-                                color: '#aaa',
-                                border: '1px solid'
-                            }}
-                            ghost
-                            size="small"
-                            onClick={() => this.handleSaveModify()}
-                        >
-                            COPY
-                    </Button>
-                    </div>
-                </div>
-                <ControlPanel />
-                <SuggestionGallery />
+            <div
+                style={{
+                    width: show ? 320 : 0,
+                    border: show ? '10px solid white' : '0px',
+                }}
+                className={'exemplar_panel_container'}
+            >
+                {
+                    show && (
+                        <div>
+                            <div className={this.props.class}>
+                                <Header title={this.props.title} />
+                                <div ref={this.ref} style={{
+                                    height: 280,
+                                    position: 'absolute',
+                                    top: 40,
+                                }} onClick={this.onSetViewCenter}>
+                                    {
+                                        this.props.graphsInfo.source.sourceOrigin && <GraphD3
+                                            dispatch={this.props.dispatch}
+                                            data={this.props.graphsInfo.source.sourceOrigin}
+                                            markers={this.props.graphsInfo.source.sourceMarkers} // not general usage, only to get total number of markers
+                                            width={300}
+                                            height={280}
+                                            padding={20}
+                                            autoLayout={false}
+                                            onDragged={this.props.onDragged}
+                                            onClickNode={this.onClickNode}
+                                            saveModify={this.state.saveModify}
+                                            id={this.props.class}
+                                        />
+                                    }
+                                    <Button
+                                        style={{
+                                            position: 'absolute',
+                                            bottom: 4,
+                                            right: 4,
+                                            color: '#aaa',
+                                            border: '1px solid'
+                                        }}
+                                        ghost
+                                        size="small"
+                                        onClick={() => this.handleSaveModify()}
+                                    >
+                                        COPY
+                                    </Button>
+                                </div>
+                            </div>
+                            <ControlPanel />
+                            <SuggestionGallery />
+                        </div>
+                    )
+                }
             </div>
         )
     }

@@ -359,8 +359,8 @@ class WholeGraph extends React.Component {
             >
                 <Header
                     style={{
-                        width: showExemplar ? 1800 : 1900,
-                        left: showExemplar ? 100 : 0,
+                        width: showExemplar ? 1590 : 1900,
+                        left: showExemplar ? 310 : 0,
                         transition: 'left 0.8s, width 0.8s'
                     }}
                     title="NODE-LINK VIEW"
