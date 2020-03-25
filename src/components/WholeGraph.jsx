@@ -430,15 +430,6 @@ class WholeGraph extends React.Component {
                         </Button>
 
                 </div>
-                {source.sourceOrigin && <Exemplar
-                    class={'source_modified'}
-                    title={'SOURCE MODIFIED'}
-                    graph={source.sourceOrigin}
-                    markers={source.sourceMarkers}
-                    // graph={this.props.lassoType === 'source' ? this.props.graphsInfo.source : this.props.graphsInfo.target}
-                    // markers={this.props.lassoType === 'source' ? this.props.graphsInfo.sourceMarkers : this.props.graphsInfo.targetMarkers}
-                    onDragged={this.onDraggedSource} />}
-
                 {/* {
                     // TODO: show only for debug, can safely deleted
                     this.props.graphsInfo.targetGenerated &&

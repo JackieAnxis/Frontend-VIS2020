@@ -49,6 +49,9 @@ class Exemplar extends React.Component {
     }
 
     render() {
+        if (!this.props.graphsInfo.source.sourceOrigin) {
+            return null;
+        }
         return (
             <div>
                 <div className={this.props.class}>
@@ -59,10 +62,10 @@ class Exemplar extends React.Component {
                         top: 40,
                     }} onClick={this.onSetViewCenter}>
                         {
-                            this.props.graph && <GraphD3
+                            this.props.graphsInfo.source.sourceOrigin && <GraphD3
                                 dispatch={this.props.dispatch}
-                                data={this.props.graph}
-                                markers={this.props.markers} // not general usage, only to get total number of markers
+                                data={this.props.graphsInfo.source.sourceOrigin}
+                                markers={this.props.graphsInfo.source.sourceMarkers} // not general usage, only to get total number of markers
                                 width={300}
                                 height={280}
                                 padding={20}
