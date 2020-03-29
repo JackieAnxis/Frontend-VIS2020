@@ -1,5 +1,7 @@
 .exemplar_panel_container {
   position: absolute;
+  /* background-color: rgb(238, 238, 238); */
+  background-color: white;
   width: 0px;
   height: 1080px;
   border: 0px solid white;
