@@ -54,7 +54,7 @@ class Exemplar extends React.Component {
             <div
                 style={{
                     width: show ? 320 : 0,
-                    border: show ? '10px solid white' : '0px',
+                    border: show ? '10px solid rgb(238, 238, 238)' : '0px',
                 }}
                 className={'exemplar_panel_container'}
             >

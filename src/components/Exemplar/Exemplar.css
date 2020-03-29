@@ -1,7 +1,7 @@
 .exemplar_panel_container {
   position: absolute;
-  /* background-color: rgb(238, 238, 238); */
-  background-color: white;
+  background-color: rgb(238, 238, 238);
+  /* background-color: white; */
   width: 0px;
   height: 1080px;
   border: 0px solid white;
@@ -18,7 +18,8 @@
   /* border-radius: 5px; */
   width: 300px;
   height: 320px;
-  background: #f6f6f6;
+  /* background: #f6f6f6; */
+  background: white;
 }
 
 .target_generated {

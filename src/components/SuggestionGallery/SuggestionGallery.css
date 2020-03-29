@@ -14,7 +14,8 @@
   /* border-radius: 5px; */
   max-height: 566px;
   /* overflow: auto; */
-  background: #f6f6f6;
+  /* background: #f6f6f6; */
+  background: white;
   overflow-y: auto;
   overflow-x: hidden;
 }

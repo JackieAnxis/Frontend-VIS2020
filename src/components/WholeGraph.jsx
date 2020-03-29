@@ -19,14 +19,18 @@ window.d3 = d3 // NOTE: d3-lasso need global d3, f**k
 const configs = {
     width: 1900, // 1920 - 20
     height: 1020, // 1080 - 40 - 20
-    bgColor: 'rgba(238, 238, 238, 1)',
+    // bgColor: 'rgba(238, 238, 238, 1)',
+    bgColor: '#ffffff',
     node: {
-        color: 'rgba(36, 144, 200, 0.5)',
+        // color: 'rgba(36, 144, 200, 0.5)',
+        color: 'rgba(190, 200, 200, 1)',
         r: 5,
-        border: 1.5,
+        // border: 1.5,
+        border: 0,
     },
     link: {
-        color: 'rgba(153, 153, 153, 0.1)',
+        // color: 'rgba(153, 153, 153, 0.1)',
+        color: 'rgba(190, 200, 200, 1)',
         width: 3,
     },
     padding: 20,
