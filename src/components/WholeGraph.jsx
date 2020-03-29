@@ -221,6 +221,12 @@ class WholeGraph extends React.Component {
 
             const nodes = this.lasso.selectedItems().data();
             const selectedGraph = getGraphFromNodes(nodes);
+
+            svg.select('#links').selectAll('line.selected').classed('selected', false);
+            for (const link of selectedGraph.links) {
+                svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
+            }
+
             if (nodes.length) {
                 this.props.dispatch(setLassoResult(selectedGraph, this.props.lassoType));
             }
