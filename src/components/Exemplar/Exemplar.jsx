@@ -112,7 +112,7 @@ class Exemplar extends React.Component {
 function mapStateToProps(state) {
     return {
         // lassoType: state.lasso.type,
-        // graph: state.graphs.source,
+        graph: state.graphs.source.sourceOrigin,
         // wholeGraphData: state.wholeGraph.graph,
         // allMarker: state.deformation.allMarker
         exemplarType: state.wholeGraph.lassoType,

@@ -82,12 +82,18 @@ class WholeGraph extends React.Component {
                 this.zoom.duration(750).translateTo(svg.transition().duration(500), center.x, center.y);
 
                 svg.select('#nodes').selectAll('circle.selected').classed('selected', false).attr('r', 5);
+                svg.select('#nodes').selectAll('circle.selected-target').classed('selected-target', false);
                 svg.select('#links').selectAll('line.selected').classed('selected', false);
+                svg.select('#links').selectAll('line.selected-target').classed('selected-target', false);
+
+                let type = JSON.stringify(nextProps.viewCenter) === JSON.stringify(this.props.graphsInfo.source.sourceOrigin) ? 'selected' : 'selected-target';
+
                 for (const node of nextProps.viewCenter.nodes) {
-                    svg.select(`#node-${node.id}`).classed('selected', true)
+                    svg.select(`#node-${node.id}`).classed(type, true)
                 }
                 for (const link of nextProps.viewCenter.links) {
-                    svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
+                    // svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
+                    svg.select(`#link-${link.source}-${link.target}`).classed(type, true)
                 }
             }
         }
@@ -201,20 +207,29 @@ class WholeGraph extends React.Component {
         };
 
         const lasso_draw = function () {
+            const nodePossibleType = this.props.lassoType == 'source' ? 'possible' : 'possible-target';
             this.lasso.possibleItems()
                 .classed("not_possible", false)
-                .classed("possible", true);
+                .classed(nodePossibleType, true);
             this.lasso.notPossibleItems()
                 .classed("not_possible", true)
-                .classed("possible", false);
+                .classed(nodePossibleType, false);
         };
 
         const lasso_end = function () {
+            svg.select('#nodes').selectAll('circle.selected-target').classed('selected', false);
+            svg.select('#nodes').selectAll('circle.selected-target').classed('selected-target', false);
+            svg.select('#links').selectAll('line.selected').classed('selected', false);
+            svg.select('#links').selectAll('line.selected-target').classed('selected-target', false);
+
+            const nodeSelectedType = this.props.lassoType == 'source' ? 'selected' : 'selected-target';
+            const nodePossibleType = this.props.lassoType == 'source' ? 'possible' : 'possible-target';
+
             this.lasso.items()
                 .classed("not_possible", false)
-                .classed("possible", false);
+                .classed(nodePossibleType, false);
             this.lasso.selectedItems()
-                .classed("selected", true)
+                .classed(nodeSelectedType, true)
                 .attr("r", 7 / this.zoomTransform.k);
             this.lasso.notSelectedItems()
                 .attr("r", configs.node.r / this.zoomTransform.k);
@@ -222,9 +237,8 @@ class WholeGraph extends React.Component {
             const nodes = this.lasso.selectedItems().data();
             const selectedGraph = getGraphFromNodes(nodes);
 
-            svg.select('#links').selectAll('line.selected').classed('selected', false);
             for (const link of selectedGraph.links) {
-                svg.select(`#link-${link.source}-${link.target}`).classed('selected', true)
+                svg.select(`#link-${link.source}-${link.target}`).classed(nodeSelectedType, true)
             }
 
             if (nodes.length) {

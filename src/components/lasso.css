@@ -22,12 +22,28 @@
 }
 
 .possible {
-    fill: #EC888C;
+    /* fill: #EC888C; */
+    fill: rgba(237, 107, 109, 0.7);
 }
 
-.selected {
-    fill: rgba(230, 92, 73, 1);
+.possible-target {
+    fill: rgba(50, 108, 180, 0.7);
 }
+
+
+.selected {
+    fill: rgba(237, 107, 109, 1);
+}
+
+.selected-target {
+    fill: rgb(50, 108, 180);
+}
+
 line.selected {
-  stroke: #EC888C;
+    /* stroke: #EC888C; */
+    fill: rgba(237, 107, 109, 1);
+}
+
+line.selected-target {
+    stroke: rgb(50, 108, 180);
 }
