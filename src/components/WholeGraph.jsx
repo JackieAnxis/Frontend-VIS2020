@@ -31,7 +31,7 @@ const configs = {
     link: {
         // color: 'rgba(153, 153, 153, 0.1)',
         color: 'rgba(190, 200, 200, 1)',
-        width: 3,
+        width: 1.5,
     },
     padding: 20,
 }
