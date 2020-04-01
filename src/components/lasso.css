@@ -41,7 +41,7 @@
 
 line.selected {
     /* stroke: #EC888C; */
-    fill: rgba(237, 107, 109, 1);
+    stroke: rgba(237, 107, 109, 1);
 }
 
 line.selected-target {

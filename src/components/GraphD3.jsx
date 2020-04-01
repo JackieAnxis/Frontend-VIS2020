@@ -9,6 +9,17 @@ function GraphD3(props) {
   const [curGraphData, setCurGraphData] = useState();
   const svgRef = React.createRef();
 
+  let circleFill, lineStroke;
+  switch(id) {
+    case "source_modified": case "history":
+      circleFill = "#ec7569";
+      lineStroke = "#ec7569";
+      break;
+    default:
+      circleFill = "#4169E1";
+      lineStroke = "#4169E1";
+  }
+
   const draw = () => {
     setCurGraphData(null);
     const transformer = GraphTransformer(data, width, height, padding);
@@ -66,7 +77,7 @@ function GraphD3(props) {
 
     // TODO: link draw
     const link = svg.append("g")
-      .attr("stroke", "#999")
+      .attr("stroke", lineStroke)
       .attr("stroke-opacity", 0.6)
       .selectAll("line")
       .data(links)
@@ -95,7 +106,7 @@ function GraphD3(props) {
       .attr('cx', d => d.x)
       .attr('cy', d => d.y)
       // .attr("fill", (d, i) => (i < 3) ? colors[i]:'#aaa')
-      .attr("fill", '#aaa')
+      .attr("fill", circleFill)
       .on('click', function (d) {
         if (d3.event.defaultPrevented) return; // dragged
         if (onClickNode) {
@@ -111,7 +122,7 @@ function GraphD3(props) {
             .text('' + (markers.length))
             */
           d3.select(this)
-            .attr('fill', '#E65C49')
+            .attr('fill', circleFill)
             .attr('r', 15)
           d3.select(this.parentNode)
             .select('text')
@@ -143,13 +154,14 @@ function GraphD3(props) {
       let markerNodes = node.filter(d=> {
         return markers.indexOf(parseInt(d.id)) > -1
       });
-      markerNodes.attr('fill', '#E65C49')
+
+      markerNodes.attr('fill', circleFill)
           .attr('r', 15);
-      let markerIndex = 1;
-      markerNodes.each(function(d, index) { // 为什么index全是0啊
+      // let markerIndex = 1;
+      markerNodes.each(function(d) {
           d3.select(this.parentNode)
           .select('text')
-          .text('' + (markerIndex++))
+          .text('' + (markers.indexOf(parseInt(d.id)) + 1))
       })
     }
     
@@ -189,7 +201,7 @@ function GraphD3(props) {
 
     labels = svg.append('g').attr('id', 'labels'); // draw labels above nodes
     // suggestion和history默认不能drag和zoom
-    if (id.indexOf("modified") > -1) {
+    if (id === "source_modified") {
       node.call(d3.drag()
         .on('start', dragStart)
         .on('drag', dragged)
@@ -246,7 +258,7 @@ function GraphD3(props) {
     const svg = d3.select(svgRef.current);
     svg.select('#labels').selectAll('*').remove();
     svg.select('#nodes').selectAll('circle')
-      .attr('fill', '#aaa')
+      .attr('fill', circleFill)
       .attr('r', 5)
   }
 
@@ -293,7 +305,7 @@ function GraphD3(props) {
       .attr("id", d => d.id)
       // .attr('cx', d => d.x)
       // .attr('cy', d => d.y)
-      .attr("fill", '#aaa')
+      .attr("fill", circleFill)
       .call(d3.drag()
         .on('start', dragStart)
         .on('drag', dragged)
