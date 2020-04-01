@@ -29,8 +29,8 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-bottom: 2px solid;
-  border-image: linear-gradient(to right,#f3f3f3,#333, #f3f3f3) 1 10;
+  border-bottom: 2px solid #cacaca;
+  /* border-image: linear-gradient(to right,#f3f3f3,#333, #f3f3f3) 1 10; */
 }
 .scroll-box::-webkit-scrollbar {  
   width: 8px;  

@@ -23,28 +23,40 @@ class HistoryUnit extends React.PureComponent {
   render () {
     return (
       <div className="HistoryLine">
-        <div className="HistoryItem">
-          <GraphD3
-            data={this.props.data.beforeGraph}
-            width={this.state.width}
-            height={this.state.height}
-            padding={this.state.padding}
-            markers={this.props.data.markers}
-            id={"history"}
-          />
+        <div className="HistoryLineGraphs">
+          <div className="HistoryItem">
+            <GraphD3
+              data={this.props.data.beforeGraph}
+              width={this.state.width}
+              height={this.state.height}
+              padding={this.state.padding}
+              markers={this.props.data.markers}
+              id={"history"}
+            />
+          </div>
+          <img src="arrow.svg" style={{width: 50}}></img>
+          {/* <div className="HistorySplitLine"></div> */}
+          <div className="HistoryItem">
+            <GraphD3
+              data={this.props.data.afterGraph}
+              width={this.state.width}
+              height={this.state.height}
+              padding={this.state.padding}
+              markers={this.props.data.markers}
+              id={"history"}
+            />
+          </div>
         </div>
-        <div className="HistorySplitLine"></div>
-        <div className="HistoryItem">
-          <GraphD3
-            data={this.props.data.afterGraph}
-            width={this.state.width}
-            height={this.state.height}
-            padding={this.state.padding}
-            markers={this.props.data.markers}
-            id={"history"}
-          />
-        </div>
-        <Button onClick={this.handleCopy}>COPY</Button>
+        <Button
+          onClick={this.handleCopy}
+          size="small"
+          style={{
+            float: 'right',
+            marginRight: 5,
+            marginBottom: 5
+          }}>
+          COPY
+        </Button>
       </div>
     )
   }
@@ -70,12 +82,13 @@ class HistoryPanel extends React.Component {
         <div id="ClickIcon">
           <Icon type={this.state.isPanelOpen ? "right-square-o" : "left-square-o"} onClick={this.handleBarClick}/>
         </div>
+        <div id="montLayer" style={{display: this.state.isPanelOpen ? "block" : "none"}}></div>
         <div
           id="HistoryPanelBody"
           style={{
-            width: this.state.isPanelOpen ? 525 : 0,
-            border: this.state.isPanelOpen ? '1px solid #333':'none',
-            maxHeight: this.props.history.length ? 1060 : 80
+            width: this.state.isPanelOpen ? 465 : 0,
+            // border: this.state.isPanelOpen ? '1px solid #333':'none',
+            // maxHeight: this.props.history.length ? 1060 : 80
             }}>
           <div id="HistoryTitle">HISTORY</div>
           {this.props.history.length ? <div id="HistoryPanelContent" className="scroll-box">{this.props.history.map((d,i) => 

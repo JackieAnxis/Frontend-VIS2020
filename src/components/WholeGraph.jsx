@@ -427,7 +427,7 @@ class WholeGraph extends React.Component {
                             right: 20,
                             fontSize: 18,
                         }}>
-                            <span>dataset: {this.props.name}</span>
+                            <span>Dataset: {this.props.name}</span>
                             <br />
                             <span>#node: {this.props.graph.nodes.length}</span>
                             <br />

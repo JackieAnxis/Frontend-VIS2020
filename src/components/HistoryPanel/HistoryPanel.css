@@ -9,20 +9,20 @@
   right: 10px;
   text-align: right;
   position: relative;
-  z-index: 2;
+  z-index: 3;
   font-size: 26px;
   line-height: 40px;
 }
 
 #HistoryTitle {
+  /* text-align: center; */
+  /* border-bottom: 1px solid #333; */
+  background-color: #cacaca;
   font-weight: 800;
   line-height: 40px;
-  /* font-size: 26px; */
-  background: #f3f3f3;
-  color: #333;
+  font-size: 26px;
+  color: #262d37;
   text-indent: 10px;
-  text-align: center;
-  border-bottom: 1px solid #333;
 }
 
 #HistoryPanelBody {
@@ -34,42 +34,45 @@
   /* width: 0px; */
   overflow: hidden;
   transition: width 0.5s, border 0.5s;
-  z-index: 1;
+  z-index: 2;
   top: 0;
-  border-radius: 5px;
+  /* border-radius: 5px; */
+  height: 1060px;
   /* max-height: 1060px; */
   background: #f6f6f6;
 }
 
 #HistoryPanelContent {
-  max-height: 1020px;
+  height: 1020px;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 
 .HistoryLine {
+  overflow: hidden;
+  border-bottom: 2px solid #cacaca;
+  /* border-image: linear-gradient(to right,#f3f3f3,#333, #f3f3f3) 1 10; */
+}
+.HistoryLineGraphs {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  border-bottom: 2px solid;
-  border-image: linear-gradient(to right,#f3f3f3,#333, #f3f3f3) 1 10;
 }
-.HistorySplitLine {
+/* .HistorySplitLine {
   height: 150px;
   width: 1px;
   background: linear-gradient(to bottom,transparent, black, transparent);
-}
+} */
 .HistoryItem {
   margin: 5px;
-  background: #eee;
+  /* background: #eee; */
 }
 
 #InfoText {
   font-style: italic;
   text-align: center;
-  /* background: #eee; */
-  line-height: 40px;
+  line-height: 1020px;
   font-size: 18px;
   /* height: 1020px; */
 }
@@ -85,3 +88,13 @@
   border-radius: 10px;  
   background-color:#a6a3a3;
 } 
+
+#montLayer {
+  width: 1900px;
+  height: 1060px;
+  position: absolute;
+  margin-top: -40px;
+  opacity: 0.2;
+  background: rgb(0, 0, 0);
+  z-index: 1;
+}
