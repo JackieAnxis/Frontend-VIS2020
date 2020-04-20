@@ -122,14 +122,20 @@ function GraphD3(props) {
             .text('' + (markers.length))
             */
           d3.select(this)
-            .attr('fill', circleFill)
-            .attr('r', 15)
+            // .attr('fill', circleFill)
+            .attr('fill', 'white')
+            .attr('r', 8)
+            .attr('stroke', circleFill)
+            .attr('stroke-width', 3)
+          d3.select(this.parentNode).raise()
+          /*
           d3.select(this.parentNode)
             .select('text')
             .text('' + (markers.length))
             .each(function () {
               this.parentNode.append(this)
             })
+          */
 
           // d3.select(this.nextSibling)
           // .text('' + (markers.length))
