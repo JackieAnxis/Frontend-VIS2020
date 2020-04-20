@@ -1,6 +1,7 @@
 #SuggestionGalleryContainer {
   position: absolute;
-  top: 450px;
+  /* top: 450px; */
+  top: 537px;
   /* left: 5px; */
   width: 300px;
 }
@@ -12,7 +13,8 @@
   top: 40px;
   border: 2px solid #fff;
   /* border-radius: 5px; */
-  max-height: 566px;
+  /* max-height: 566px; */
+  max-height: 516px;
   /* overflow: auto; */
   /* background: #f6f6f6; */
   background: white;

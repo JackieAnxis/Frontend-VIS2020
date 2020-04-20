@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Header from '../Header'
 import { Button } from 'antd'
 import ControlPanel from '../ControlPanel/ControlPanel'
+import Params from '../Params/Params'
 import SuggestionGallery from '../SuggestionGallery/SuggestionGallery'
 import '../common.css'
 import './Exemplar.css'
@@ -100,6 +101,7 @@ class Exemplar extends React.Component {
                                 </div>
                             </div>
                             <ControlPanel />
+                            <Params />
                             <SuggestionGallery />
                         </div>
                     )
