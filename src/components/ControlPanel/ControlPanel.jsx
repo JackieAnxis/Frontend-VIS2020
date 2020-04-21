@@ -74,10 +74,12 @@ class ControlPanel extends React.Component {
 			label: key.toUpperCase(),
 			key
 		}))
+		/*
 		paramsTemplate.push({
 			label: 'ℇ',
 			key: 'eps'
 		})
+		*/
 		const self = this
 		return (
 			<div id="ControlPanelContainer">
