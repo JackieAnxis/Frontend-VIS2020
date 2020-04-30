@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
-import { defalutStyle } from '../config';
+import { defalutStyle } from '../configs';
 
-const width = 1020;
+const width = 1900;
 const height = 1020;
 
 const clusterColors = [
@@ -394,7 +394,7 @@ export function nodeLinkG(canvas, data, onLassoCallback, cluster = null) {
     }
 
     if (hasPosition) {
-        initActions();
+        // initActions();
         g.refresh();
         g.refresh();
     } else {

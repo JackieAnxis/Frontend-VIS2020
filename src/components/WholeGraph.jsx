@@ -13,6 +13,7 @@ import './common.css'
 import './lasso.css'
 import { applyDeformationToWholegraph } from '../actions/deformation'
 import { setLassoResult, switchLassoType } from '../actions/wholeGraph'
+import { nodeLinkG } from '../old-vis'
 
 window.d3 = d3 // NOTE: d3-lasso need global d3, f**k
 
@@ -113,6 +114,7 @@ class WholeGraph extends React.Component {
     }
 
     draw = () => {
+
         let _this = this;
         if (!this.props.graph || !this.props.graph.nodes) {
             return;
@@ -125,6 +127,14 @@ class WholeGraph extends React.Component {
         for (const n of nodes) {
             nodeMap[n.id] = n;
         }
+
+        // use WebGL draw
+        const canvas = document.querySelector('#whole-graph-g')
+        const lassoCallback = (nodes) => {
+            console.log(nodes)
+        }
+        nodeLinkG(canvas, visData, lassoCallback)
+
 
         const svg = d3.select(this.svgRef.current);
         svg.selectAll('*').remove();
@@ -391,6 +401,7 @@ class WholeGraph extends React.Component {
                 />
                 <HistoryPanel />
                 <div className='container'>
+                    <canvas id='whole-graph-g'></canvas>
                     <svg ref={this.svgRef}></svg>
                     {
                         // upload&download button
