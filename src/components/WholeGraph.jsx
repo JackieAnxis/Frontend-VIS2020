@@ -132,8 +132,8 @@ class WholeGraph extends React.Component {
 
         // use WebGL draw
         const canvas = document.querySelector('#whole-graph-g')
-        const lassoCallback = (nodes) => {
-            console.log(nodes)
+        const lassoCallback = (selected_g) => {
+            this.props.dispatch(setLassoResult(selected_g, this.props.lassoType));
         }
         nodeLinkG(canvas, visData, lassoCallback)
 
