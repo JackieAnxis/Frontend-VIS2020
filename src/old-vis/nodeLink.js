@@ -394,7 +394,7 @@ export function nodeLinkG(canvas, data, onLassoCallback, cluster = null) {
     }
 
     if (hasPosition) {
-        // initActions();
+        initActions();
         g.refresh();
         g.refresh();
     } else {

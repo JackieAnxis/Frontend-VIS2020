@@ -101,6 +101,8 @@ class WholeGraph extends React.Component {
     }
 
     toggleLasso = (enable) => {
+        window.g.toggleLasso(enable)
+
         const svg = d3.select(this.svgRef.current);
         if (enable) {
             svg.on('.zoom', null);
@@ -401,8 +403,15 @@ class WholeGraph extends React.Component {
                 />
                 <HistoryPanel />
                 <div className='container'>
-                    <canvas id='whole-graph-g'></canvas>
-                    <svg ref={this.svgRef}></svg>
+                    <div style={{
+                        position: "relative",
+                        width: 1900,
+                        height: 1020,
+                        overflow: 'hidden'
+                    }}>
+                        <canvas id='whole-graph-g'></canvas>
+                    </div>
+                    {/* <svg ref={this.svgRef}></svg> */}
                     {
                         // upload&download button
                         <div style={{
